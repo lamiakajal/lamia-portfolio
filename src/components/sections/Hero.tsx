@@ -342,7 +342,10 @@ export default function Hero() {
               className="hero-reveal text-sm sm:text-base text-slate-300 max-w-xl mx-auto lg:mx-0 leading-relaxed font-normal"
               style={{ "--d": "700ms" } as React.CSSProperties}
             >
-              I design and build modern full-stack web applications, from pixel-perfect, responsive interfaces to secure back-end APIs, using Next.js, TypeScript, React, Node.js, MongoDB and Tailwind CSS.
+              I design and build modern full-stack web applications, from
+              pixel-perfect, responsive interfaces to secure back-end APIs,
+              using Next.js, TypeScript, React, Node.js, MongoDB and Tailwind
+              CSS.
             </p>
 
             <div
