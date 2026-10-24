@@ -3,12 +3,40 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    scroll-padding-top: 5rem; /* fixed Navbar should not cover section titles */
+    max-width: 100%;
+    overflow-x: clip; /* prevents sideways scroll from glows / blur / translate */
+    -webkit-text-size-adjust: 100%;
   }
+
   body {
     background-color: #05010a; /* Deep cosmic dark background */
     color: #f8fafc;
     font-family: "Plus Jakarta Sans", sans-serif;
-    overflow-x: hidden;
+    max-width: 100%;
+    overflow-x: clip; /* "clip" instead of "hidden": no scroll container, keeps sticky working */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Brand text selection */
+  ::selection {
+    background: rgba(236, 72, 153, 0.35);
+    color: #ffffff;
+  }
+
+  /* Visible keyboard focus everywhere */
+  :focus-visible {
+    outline: 2px solid #f472b6;
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  img,
+  svg,
+  video {
+    max-width: 100%;
   }
 }
 
@@ -26,6 +54,11 @@
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(236, 72, 153, 0.6);
 }
+/* Firefox */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(236, 72, 153, 0.4) #05010a;
+}
 
 /* Pro Dot Matrix Grid Pattern */
 .bg-pro-grid {
@@ -39,14 +72,14 @@
 @keyframes floatOrb {
   0%,
   100% {
-    transform: translate(0, 0) scale(1);
+    transform: translate3d(0, 0, 0) scale(1);
   }
   50% {
-    transform: translate(30px, -40px) scale(1.1);
+    transform: translate3d(30px, -40px, 0) scale(1.1);
   }
 }
 
-@keyframes pulseGnow {
+@keyframes pulseGlow {
   0%,
   100% {
     opacity: 0.4;
@@ -58,14 +91,60 @@
   }
 }
 
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 10px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes gradientFlow {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
+}
+
 .animate-orb-1 {
   animation: floatOrb 12s ease-in-out infinite;
+  will-change: transform;
 }
 
 .animate-orb-2 {
   animation: floatOrb 15s ease-in-out infinite reverse;
+  will-change: transform;
 }
 
 .animate-pulse-glow {
   animation: pulseGlow 4s ease-in-out infinite;
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Reusable animated gradient text: add with bg-linear-to-r + bg-clip-text */
+.animate-gradient-flow {
+  background-size: 200% auto;
+  animation: gradientFlow 6s linear infinite;
+}
+
+/* Respect users who prefer less motion */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .animate-orb-1,
+  .animate-orb-2,
+  .animate-pulse-glow,
+  .animate-fadeIn,
+  .animate-gradient-flow {
+    animation: none;
+  }
 }
