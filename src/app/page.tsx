@@ -1,19 +1,21 @@
 // ==========================================
 // Page: Home
 // Description: Main landing page assembling Hero and upcoming portfolio sections
-// Author: Lamia Kajal (Senior Full Stack Software Engineer)
+// Author: Lamia Kajal (Full Stack Developer)
 // ==========================================
 
 import React from "react";
 import Hero from "@/components/sections/Hero";
+import About from "@/components/sections/About";
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-[#05010a] text-slate-100 overflow-hidden">
+    <div className="min-h-screen text-slate-100 overflow-hidden">
       {/* Hero Section */}
       <Hero />
+      <About />
 
       {/* Future sections (About, Projects, Skills, Contact) will be added here */}
-    </main>
+    </div>
   );
 }

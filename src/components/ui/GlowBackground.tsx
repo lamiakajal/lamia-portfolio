@@ -1,7 +1,7 @@
 // ==========================================
 // Component: GlowBackground
 // Description: Background grid & animated ambient glowing orbs
-// Author: Lamia Kajal (Senior Frontend Engineer)
+// Author: Lamia Kajal (Full Stack Developer)
 // ==========================================
 
 import React from "react";

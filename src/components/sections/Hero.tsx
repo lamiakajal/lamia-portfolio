@@ -2,15 +2,17 @@
 // Component: Hero Section
 // Description: Hero aligned with Navbar bounds, typewriter roles (ESLint fixed),
 //              cursor spotlight, 3D tilt profile, staggered entrance and orbiting skills
-// Author: Lamia Kajal (Senior Full Stack Software Engineer)
+// Author: Lamia Kajal (Full Stack Developer)
 // ==========================================
 
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef } from "react";
 import Image from "next/image";
 import { Download, ChevronDown } from "lucide-react";
 import { Outfit } from "next/font/google";
+import { getSocial } from "@/data/portfolioData";
+import { useTypewriter } from "@/hooks/useTypewriter";
 
 const outfit = Outfit({
   subsets: ["latin"],
@@ -115,14 +117,16 @@ const skills = [
 /* Roles for the typewriter line */
 const roles = [
   "scalable Next.js applications",
-  "type-safe back-end services",
-  "pixel-perfect responsive UIs",
-  "fast, accessible experiences",
+  "secure full-stack web apps",
+  "pixel-perfect responsive interfaces",
+  "smooth, animated user experiences",
+  "type-safe APIs with Node.js & MongoDB",
+  "AI-powered, future-ready products",
 ];
 
 const socials = [
   {
-    href: "https://github.com/lamiakajal",
+    href: getSocial("github"),
     label: "GitHub",
     icon: (
       <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
@@ -131,7 +135,7 @@ const socials = [
     ),
   },
   {
-    href: "https://linkedin.com",
+    href: getSocial("linkedin"),
     label: "LinkedIn",
     icon: (
       <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
@@ -140,7 +144,7 @@ const socials = [
     ),
   },
   {
-    href: "https://facebook.com",
+    href: getSocial("facebook"),
     label: "Facebook",
     icon: (
       <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
@@ -150,72 +154,12 @@ const socials = [
   },
 ];
 
-/* ------------------------------------------------------------------
-   Typewriter hook — types, pauses, deletes, moves to next role
------------------------------------------------------------------- */
-function useTypewriter(
-  words: string[],
-  typeMs = 55,
-  deleteMs = 30,
-  pauseMs = 1700,
-) {
-  const [index, setIndex] = useState(0);
-  const [text, setText] = useState("");
-  const [deleting, setDeleting] = useState(false);
-
-  useEffect(() => {
-    const reduce = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    ).matches;
-
-    if (reduce) {
-      // Wrapped inside a setTimeout to fix ESLint "set-state-in-effect" error
-      const t = setTimeout(() => setText(words[0]), 0);
-      return () => clearTimeout(t);
-    }
-
-    const full = words[index];
-    let delay = deleting ? deleteMs : typeMs;
-
-    if (!deleting && text === full) delay = pauseMs;
-
-    const t = setTimeout(() => {
-      if (!deleting && text === full) {
-        setDeleting(true);
-      } else if (deleting && text === "") {
-        setDeleting(false);
-        setIndex((i) => (i + 1) % words.length);
-      } else {
-        setText(
-          deleting
-            ? full.slice(0, text.length - 1)
-            : full.slice(0, text.length + 1),
-        );
-      }
-    }, delay);
-
-    return () => clearTimeout(t);
-  }, [text, deleting, index, words, typeMs, deleteMs, pauseMs]);
-
-  return text;
-}
-
 export default function Hero() {
-  const sectionRef = useRef<HTMLElement>(null);
   const tiltRef = useRef<HTMLDivElement>(null);
   const typed = useTypewriter(roles);
 
-  /* Cursor spotlight: updates CSS variables directly (no re-render) */
-  const handleSectionMove = (e: React.MouseEvent<HTMLElement>) => {
-    const el = sectionRef.current;
-    if (!el) return;
-    const rect = el.getBoundingClientRect();
-    el.style.setProperty("--mx", `${e.clientX - rect.left}px`);
-    el.style.setProperty("--my", `${e.clientY - rect.top}px`);
-  };
-
   /* 3D tilt for the profile circle */
-  const handleTiltMove = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleTiltMove = (e: React.PointerEvent<HTMLDivElement>) => {
     const el = tiltRef.current;
     if (!el) return;
     const rect = el.getBoundingClientRect();
@@ -229,21 +173,17 @@ export default function Hero() {
         "perspective(900px) rotateY(0deg) rotateX(0deg)";
     }
   };
+  // Touch / pen: reset when the finger lifts. Mouse: keep tilting while hovering.
+  const releaseTilt = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (e.pointerType !== "mouse") resetTilt();
+  };
 
   return (
     <section
-      ref={sectionRef}
-      onMouseMove={handleSectionMove}
       id="home"
-      /* overflow-x-clip stops any child (glows, orbit, blur) from pushing the page sideways */
-      className="relative w-full min-h-screen flex items-center overflow-x-clip bg-[#05010a]"
-      style={{
-        backgroundImage: `
-          linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-          linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px)
-        `,
-        backgroundSize: "40px 40px",
-      }}
+      /* overflow-x-clip stops any child (glows, orbit, blur) from pushing the page sideways.
+         The square grid + mouse spotlight now live in the global background (layout.tsx). */
+      className="relative w-full min-h-screen flex items-center overflow-x-clip"
     >
       <style
         dangerouslySetInnerHTML={{
@@ -351,16 +291,6 @@ export default function Hero() {
         }}
       />
 
-      {/* Cursor-following spotlight (hidden on touch devices) */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 hidden md:block"
-        style={{
-          background:
-            "radial-gradient(420px circle at var(--mx, 50%) var(--my, 30%), rgba(236,72,153,0.13), transparent 60%)",
-        }}
-      />
-
       {/* Background Ambient Glow */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-87.5 sm:w-137.5 h-87.5 sm:h-137.5 bg-pink-500/10 blur-[150px] pointer-events-none rounded-full"></div>
 
@@ -377,12 +307,12 @@ export default function Hero() {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-pink-400 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-pink-500"></span>
               </span>
-              <span>Senior Full-Stack Software Engineer</span>
+              <span>Full Stack Developer</span>
             </div>
 
             <div className="space-y-2 sm:space-y-3">
               <h1
-                className={`hero-reveal text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-tight ${outfit.className}`}
+                className={`hero-reveal text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-strong leading-tight ${outfit.className}`}
                 style={{ "--d": "250ms" } as React.CSSProperties}
               >
                 Hi, I&apos;m{" "}
@@ -404,7 +334,7 @@ export default function Hero() {
               style={{ "--d": "550ms" } as React.CSSProperties}
               aria-live="polite"
             >
-              I craft <span className="text-white">{typed}</span>
+              I craft <span className="text-strong">{typed}</span>
               <span className="type-cursor" aria-hidden />
             </p>
 
@@ -412,10 +342,10 @@ export default function Hero() {
               className="hero-reveal text-sm sm:text-base text-slate-300 max-w-xl mx-auto lg:mx-0 leading-relaxed font-normal"
               style={{ "--d": "700ms" } as React.CSSProperties}
             >
-              Specialized in engineering robust full-stack applications from
-              high-performance back-end microservices to pixel-perfect,
-              responsive front-end experiences using Next.js, TypeScript, React,
-              and Tailwind CSS.
+              I design and build modern full-stack web applications, from
+              pixel-perfect, responsive interfaces to secure back-end APIs,
+              using Next.js, TypeScript, React, Node.js, MongoDB and Tailwind
+              CSS.
             </p>
 
             <div
@@ -458,16 +388,19 @@ export default function Hero() {
             <div className="float-slow">
               <div
                 ref={tiltRef}
-                onMouseMove={handleTiltMove}
-                onMouseLeave={resetTilt}
-                className="orbit-wrap relative w-68 sm:w-80 lg:w-88 h-68 sm:h-80 lg:h-88 flex items-center justify-center transition-transform duration-200 ease-out will-change-transform"
+                onPointerDown={handleTiltMove}
+                onPointerMove={handleTiltMove}
+                onPointerLeave={resetTilt}
+                onPointerUp={releaseTilt}
+                onPointerCancel={resetTilt}
+                className="touch-pan-y orbit-wrap relative w-68 sm:w-80 lg:w-88 h-68 sm:h-80 lg:h-88 flex items-center justify-center transition-transform duration-200 ease-out will-change-transform"
               >
                 {/* Outer Rotating Glow Ring */}
                 <div
                   className="absolute inset-0 rounded-full bg-linear-to-r from-pink-500 via-fuchsia-500 to-pink-500 opacity-70 blur-md animate-spin"
                   style={{ animationDuration: "12s" }}
                 ></div>
-                <div className="absolute inset-2 rounded-full bg-[#05010a]"></div>
+                <div className="absolute inset-2 rounded-full bg-page"></div>
 
                 {/* Inner Pulse Ring */}
                 <div
@@ -505,7 +438,7 @@ export default function Hero() {
                     >
                       <div
                         title={skill.name}
-                        className={`w-10 h-10 sm:w-11 sm:h-11 lg:w-12 lg:h-12 ${skill.shape} bg-[#05010a]/95 border-2 flex items-center justify-center backdrop-blur-md ${skill.color}`}
+                        className={`w-10 h-10 sm:w-11 sm:h-11 lg:w-12 lg:h-12 ${skill.shape} bg-chip border-2 flex items-center justify-center backdrop-blur-md ${skill.color}`}
                       >
                         {skill.icon}
                       </div>

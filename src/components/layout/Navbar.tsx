@@ -11,6 +11,7 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { Menu, X, ArrowRight, Code2, Sparkles } from "lucide-react";
 import { Outfit } from "next/font/google";
+import ThemeToggle from "@/components/ui/ThemeToggle";
 
 const outfit = Outfit({
   subsets: ["latin"],
@@ -85,8 +86,8 @@ export default function Navbar() {
     <header
       className={`fixed top-0 left-0 w-full z-50 border-b transition-all duration-500 backdrop-blur-xl ${
         scrolled
-          ? "bg-[#05010a]/90 border-pink-500/20 shadow-[0_10px_40px_-15px_rgba(236,72,153,0.35)]"
-          : "bg-[#05010a]/60 border-white/6"
+          ? "bg-nav-scrolled border-pink-500/20 shadow-[0_10px_40px_-15px_rgba(236,72,153,0.35)]"
+          : "bg-nav border-line"
       }`}
     >
       <style
@@ -139,7 +140,7 @@ export default function Navbar() {
               className="absolute inset-0 rounded-xl bg-linear-to-r from-pink-500 via-fuchsia-500 to-pink-400 opacity-70 blur-xs animate-spin"
               style={{ animationDuration: "6s" }}
             ></div>
-            <div className="absolute inset-0.5 rounded-[10px] bg-[#05010a]"></div>
+            <div className="absolute inset-0.5 rounded-[10px] bg-page"></div>
             <div className="relative z-10 w-9 h-9 rounded-xl bg-linear-to-br from-pink-500/20 to-fuchsia-500/20 border border-pink-500/40 flex items-center justify-center text-pink-400 group-hover:border-pink-500 transition shadow-lg shadow-pink-500/20">
               <Code2 size={18} className="animate-pulse" />
             </div>
@@ -179,39 +180,44 @@ export default function Navbar() {
           })}
         </nav>
 
-        {/* Desktop CTA */}
-        <div className="hidden sm:flex items-center">
-          <Link
-            href="#contact"
-            className="nav-cta group relative overflow-hidden inline-flex items-center gap-2 rounded-full bg-linear-to-r from-pink-500/20 via-fuchsia-500/20 to-pink-500/20 border border-pink-500/50 px-5 py-2.5 text-xs font-semibold text-white transition-all duration-300 shadow-[0_0_20px_rgba(236,72,153,0.3)] hover:shadow-[0_0_30px_rgba(236,72,153,0.6)] hover:scale-105 active:scale-95"
-          >
-            <Sparkles
-              size={14}
-              className="text-pink-400 animate-spin"
-              style={{ animationDuration: "4s" }}
-            />
-            <span>Let&apos;s Talk</span>
-            <ArrowRight
-              size={14}
-              className="text-pink-400 transition-transform duration-300 group-hover:translate-x-1"
-            />
-          </Link>
-        </div>
+        {/* Right cluster: theme toggle, desktop CTA and mobile menu button */}
+        <div className="flex items-center gap-3">
+          <ThemeToggle />
 
-        {/* Mobile Menu Toggle */}
-        <button
-          onClick={toggleMenu}
-          className="md:hidden text-slate-300 hover:text-pink-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-pink-400 rounded p-1 transition-transform duration-300 active:scale-90"
-          aria-label="Toggle Menu"
-          aria-expanded={isOpen}
-          aria-controls="mobile-menu"
-        >
-          <span
-            className={`block transition-transform duration-300 ${isOpen ? "rotate-90" : "rotate-0"}`}
+          {/* Desktop CTA */}
+          <div className="hidden sm:flex items-center">
+            <Link
+              href="#contact"
+              className="nav-cta group relative overflow-hidden inline-flex items-center gap-2 rounded-full bg-linear-to-r from-pink-500/20 via-fuchsia-500/20 to-pink-500/20 border border-pink-500/50 px-5 py-2.5 text-xs font-semibold text-strong transition-all duration-300 shadow-[0_0_20px_rgba(236,72,153,0.3)] hover:shadow-[0_0_30px_rgba(236,72,153,0.6)] hover:scale-105 active:scale-95"
+            >
+              <Sparkles
+                size={14}
+                className="text-pink-400 animate-spin"
+                style={{ animationDuration: "4s" }}
+              />
+              <span>Let&apos;s Talk</span>
+              <ArrowRight
+                size={14}
+                className="text-pink-400 transition-transform duration-300 group-hover:translate-x-1"
+              />
+            </Link>
+          </div>
+
+          {/* Mobile Menu Toggle */}
+          <button
+            onClick={toggleMenu}
+            className="md:hidden text-slate-300 hover:text-pink-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-pink-400 rounded p-1 transition-transform duration-300 active:scale-90"
+            aria-label="Toggle Menu"
+            aria-expanded={isOpen}
+            aria-controls="mobile-menu"
           >
-            {isOpen ? <X size={24} /> : <Menu size={24} />}
-          </span>
-        </button>
+            <span
+              className={`block transition-transform duration-300 ${isOpen ? "rotate-90" : "rotate-0"}`}
+            >
+              {isOpen ? <X size={24} /> : <Menu size={24} />}
+            </span>
+          </button>
+        </div>
       </div>
 
       {/* Mobile Drawer: smooth height + staggered links */}
@@ -222,7 +228,7 @@ export default function Navbar() {
         }`}
       >
         <div className="overflow-hidden">
-          <div className="bg-[#0a0214]/95 border-t border-pink-500/20 px-6 py-6 space-y-1 text-sm backdrop-blur-2xl shadow-2xl">
+          <div className="bg-drawer border-t border-pink-500/20 px-6 py-6 space-y-1 text-sm backdrop-blur-2xl shadow-2xl">
             {links.map((l, i) => (
               <Link
                 key={l.id}

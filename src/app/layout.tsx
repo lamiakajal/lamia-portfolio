@@ -1,6 +1,6 @@
 // ==========================================
 // Root Layout with Global Navbar, Footer & SEO
-// Author: Lamia Kajal (Senior Full Stack Software Engineer)
+// Author: Lamia Kajal (Full Stack Developer)
 // ==========================================
 
 import type { Metadata } from "next";
@@ -9,6 +9,9 @@ import "./globals.css";
 import GlowBackground from "@/components/ui/GlowBackground";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import Preloader from "@/components/ui/Preloader";
+import CursorSpotlight from "@/components/ui/CursorSpotlight";
+import ScrollToTop from "@/components/ui/ScrollToTop";
 
 const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -18,28 +21,32 @@ const plusJakarta = Plus_Jakarta_Sans({
 
 // Professional SEO Metadata for Search Engines & Social Sharing
 export const metadata: Metadata = {
-  title: "Lamia Kajal — Senior Full Stack Software Engineer",
+  metadataBase: new URL("https://lamiakajal.com"),
+  title: "Lamia Kajal — Full Stack Developer",
   description:
-    "Portfolio of Lamia Kajal, a Senior Full Stack Software Engineer specializing in React, Next.js, Node.js, TypeScript, and scalable web applications.",
+    "Portfolio of Lamia Kajal, a Full Stack Developer building modern web applications with React, Next.js, Node.js, TypeScript and MongoDB.",
   keywords: [
     "Full Stack Engineer",
     "Full Stack Developer",
     "React Developer",
-    "Next.js Expert",
+    "Next.js Developer",
     "Node.js",
     "Lamia Kajal",
     "Web Developer Portfolio",
   ],
   authors: [{ name: "Lamia Kajal" }],
   openGraph: {
-    title: "Lamia Kajal — Senior Full Stack Software Engineer",
+    title: "Lamia Kajal — Full Stack Developer",
     description:
-      "Explore enterprise-grade full-stack web applications, interactive UI components, and case studies.",
-    url: "https://yourdomain.com",
+      "Explore full-stack web applications, interactive UI work and project case studies by Lamia Kajal.",
+    url: "https://lamiakajal.com",
     siteName: "Lamia Kajal Portfolio",
     type: "website",
   },
 };
+
+// Runs before first paint: applies the saved theme (default = dark) to avoid a flash
+const themeInitScript = `(function(){try{var t=localStorage.getItem("theme");document.documentElement.dataset.theme=t==="light"?"light":"dark";}catch(e){document.documentElement.dataset.theme="dark";}})();`;
 
 export default function RootLayout({
   children,
@@ -47,13 +54,40 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="scroll-smooth">
+    <html
+      lang="en"
+      data-theme="dark"
+      data-preloading="true"
+      className="scroll-smooth"
+      suppressHydrationWarning
+    >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+        {/* If JavaScript is disabled, never block the site behind the preloader */}
+        <noscript>
+          <style
+            dangerouslySetInnerHTML={{
+              __html:
+                ".preloader{display:none!important}html[data-preloading] *{animation-play-state:running!important}.reveal{opacity:1!important;filter:none!important;transform:none!important}",
+            }}
+          />
+        </noscript>
+      </head>
       <body
-        className={`${plusJakarta.className} relative min-h-screen bg-[#05010a] text-slate-100 selection:bg-pink-500 selection:text-white`}
+        className={`${plusJakarta.className} relative min-h-screen bg-page text-slate-100 selection:bg-pink-500 selection:text-white`}
         suppressHydrationWarning
       >
-        {/* Background Ambient Glows & Grid */}
+        {/* Loading page (shown once per full page load) */}
+        <Preloader />
+
+        {/* Background Ambient Glows & Square Grid (whole website) */}
         <GlowBackground />
+
+        {/* Site-wide mouse / touch spotlight */}
+        <CursorSpotlight />
+
+        {/* Bottom-right scroll progress / back-to-top button */}
+        <ScrollToTop />
 
         {/* Global Sticky Navbar */}
         <Navbar />

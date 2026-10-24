@@ -85,3 +85,82 @@ export const projectsData: Project[] = [
     ],
   },
 ];
+
+// ==========================================
+// Shared site data (single source of truth)
+// Used by Hero, About, Contact, Footer, etc.
+// ==========================================
+
+export interface SocialLink {
+  key: string;
+  label: string;
+  href: string;
+}
+
+export const socialLinks: SocialLink[] = [
+  { key: "github", label: "GitHub", href: "https://github.com/lamiakajal" },
+  {
+    key: "linkedin",
+    label: "LinkedIn",
+    href: "https://www.linkedin.com/in/lamiakajal",
+  },
+  {
+    key: "facebook",
+    label: "Facebook",
+    href: "https://www.facebook.com/lamiakajal",
+  },
+  {
+    key: "instagram",
+    label: "Instagram",
+    href: "https://www.instagram.com/lamiakajal",
+  },
+  { key: "x", label: "X (Twitter)", href: "https://x.com/lamiakajal" },
+  {
+    key: "youtube",
+    label: "YouTube",
+    href: "https://www.youtube.com/@lamiakajal",
+  },
+  {
+    key: "behance",
+    label: "Behance",
+    href: "https://www.behance.net/lamiakajal",
+  },
+  {
+    key: "pinterest",
+    label: "Pinterest",
+    href: "https://www.pinterest.com/lamiakajal",
+  },
+  { key: "medium", label: "Medium", href: "https://medium.com/@lamiakajal" },
+  { key: "blog", label: "Blog", href: "https://lamiakajal.blogspot.com" },
+  {
+    key: "whatsapp",
+    label: "WhatsApp",
+    href: "https://whatsapp.com/lamiakajal",
+  },
+];
+
+/** Quick lookup helper: getSocial("github") -> "https://github.com/lamiakajal" */
+export const getSocial = (key: string): string =>
+  socialLinks.find((s) => s.key === key)?.href ?? "#";
+
+export const contactInfo = {
+  email: "lamiakajal@gmail.com",
+  website: "https://lamiakajal.com",
+};
+
+/** Technologies shown in the About marquee (and reused by the Skills section later) */
+export const techStack: string[] = [
+  "HTML",
+  "CSS",
+  "JavaScript",
+  "TypeScript",
+  "React",
+  "Next.js",
+  "Tailwind CSS",
+  "Node.js",
+  "MongoDB",
+  "Mongoose",
+  "BetterAuth",
+  "Git & GitHub",
+  "AI-Assisted Coding",
+];

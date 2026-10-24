@@ -10,6 +10,7 @@ import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { Code2, ArrowUpRight, Mail } from "lucide-react";
 import { Outfit } from "next/font/google";
+import { getSocial, contactInfo } from "@/data/portfolioData";
 
 const outfit = Outfit({
   subsets: ["latin"],
@@ -58,7 +59,7 @@ export default function Footer() {
   }, []);
 
   return (
-    <footer className="relative z-10 border-t border-white/10 bg-[#05010a]/95 backdrop-blur-2xl text-slate-300 pt-16 pb-12 overflow-hidden select-none">
+    <footer className="relative z-10 border-t border-line bg-footer backdrop-blur-2xl text-slate-300 pt-16 pb-12 overflow-hidden select-none">
       {/* Custom CSS for Buttery Smooth Hardware-Accelerated Animations */}
       <style
         dangerouslySetInnerHTML={{
@@ -103,7 +104,7 @@ export default function Footer() {
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 space-y-10 sm:space-y-12 relative z-10">
         {/* Top Section: Brand & Responsive Meaningful Bio */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center justify-between pb-10 sm:pb-12 border-b border-white/10">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center justify-between pb-10 sm:pb-12 border-b border-line">
           {/* Left Column (Slides from Left) */}
           <div
             ref={textRef}
@@ -125,7 +126,7 @@ export default function Footer() {
                     className="absolute inset-0 rounded-xl bg-linear-to-r from-pink-500 to-fuchsia-500 opacity-70 blur-xs animate-spin"
                     style={{ animationDuration: "8s" }}
                   ></div>
-                  <div className="absolute inset-0.5 rounded-[10px] bg-[#05010a]"></div>
+                  <div className="absolute inset-0.5 rounded-[10px] bg-page"></div>
 
                   <div className="relative z-10 w-8 h-8 rounded-lg bg-linear-to-br from-pink-500/20 to-fuchsia-500/20 border border-pink-500/40 flex items-center justify-center text-pink-400 group-hover:text-pink-300 transition-colors">
                     <Code2 size={16} />
@@ -167,7 +168,7 @@ export default function Footer() {
             <div className="flex items-center justify-center md:justify-end flex-wrap gap-4 sm:gap-5 pt-2">
               {[
                 {
-                  href: "https://github.com",
+                  href: getSocial("github"),
                   label: "GitHub",
                   icon: (
                     <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
@@ -176,7 +177,7 @@ export default function Footer() {
                   ),
                 },
                 {
-                  href: "https://linkedin.com",
+                  href: getSocial("linkedin"),
                   label: "LinkedIn",
                   icon: (
                     <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
@@ -185,7 +186,7 @@ export default function Footer() {
                   ),
                 },
                 {
-                  href: "https://facebook.com",
+                  href: getSocial("facebook"),
                   label: "Facebook",
                   icon: (
                     <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
@@ -194,7 +195,7 @@ export default function Footer() {
                   ),
                 },
                 {
-                  href: "https://instagram.com",
+                  href: getSocial("instagram"),
                   label: "Instagram",
                   icon: (
                     <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
@@ -203,7 +204,7 @@ export default function Footer() {
                   ),
                 },
                 {
-                  href: "https://whatsapp.com",
+                  href: getSocial("whatsapp"),
                   label: "WhatsApp",
                   icon: (
                     <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
@@ -212,7 +213,7 @@ export default function Footer() {
                   ),
                 },
                 {
-                  href: "mailto:contact@lamiakajal.com",
+                  href: `mailto:${contactInfo.email}`,
                   label: "Email",
                   icon: <Mail size={20} />,
                 },
