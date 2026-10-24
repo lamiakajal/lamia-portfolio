@@ -186,7 +186,8 @@ const codeLines: React.ReactNode[] = [
     <span className="text-[#f9a8d4]">lamia</span> = {"{"}
   </>,
   <>
-    {"  "}role: <span className="text-[#86efac]">&quot;Full Stack Developer&quot;</span>,
+    {"  "}role:{" "}
+    <span className="text-[#86efac]">&quot;Full Stack Developer&quot;</span>,
   </>,
   <>
     {"  "}stack: [<span className="text-[#86efac]">&quot;Next.js&quot;</span>,{" "}
@@ -197,7 +198,8 @@ const codeLines: React.ReactNode[] = [
     <span className="text-[#86efac]">&quot;MongoDB&quot;</span>],
   </>,
   <>
-    {"  "}mindset: <span className="text-[#86efac]">&quot;AI-first, human-led&quot;</span>,
+    {"  "}mindset:{" "}
+    <span className="text-[#86efac]">&quot;AI-first, human-led&quot;</span>,
   </>,
   <>
     {"  "}learning: <span className="text-[#fcd34d]">true</span>,
@@ -264,8 +266,8 @@ export default function About() {
       {/* Shared container (same width as Navbar, Hero and Footer) */}
       <div className="w-full max-w-6xl mx-auto px-4 xs:px-5 sm:px-6 relative z-10 space-y-20 sm:space-y-28">
         {/* ------------------------------------------------------------------
-            1. HEADER + BIO + PHOTO
-        ------------------------------------------------------------------ */}
+			1. HEADER + BIO + PHOTO
+		------------------------------------------------------------------ */}
         <div>
           <Reveal direction="down">
             <div className="flex flex-col gap-4 items-center text-center mb-12 sm:mb-16">
@@ -296,8 +298,8 @@ export default function About() {
                     Hello! I&apos;m <Hl>Lamia Kajal</Hl>, a{" "}
                     <Hl>Full Stack Developer</Hl> who loves turning ideas into
                     fast, beautiful and genuinely useful web experiences. I
-                    enjoy owning a product from end to end: the interface
-                    people touch, the API behind it and the database that keeps
+                    enjoy owning a product from end to end: the interface people
+                    touch, the API behind it and the database that keeps
                     everything remembered.
                   </p>
                 </Reveal>
@@ -454,8 +456,8 @@ export default function About() {
         </div>
 
         {/* ------------------------------------------------------------------
-            2. JOURNEY TIMELINE + DEVELOPER CODE CARD
-        ------------------------------------------------------------------ */}
+			2. JOURNEY TIMELINE + DEVELOPER CODE CARD
+		------------------------------------------------------------------ */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-14 items-start">
           <div className="lg:col-span-7 min-w-0">
             <Reveal direction="left">
@@ -530,8 +532,8 @@ export default function About() {
         </div>
 
         {/* ------------------------------------------------------------------
-            3. WHAT I LOVE BUILDING
-        ------------------------------------------------------------------ */}
+			3. WHAT I LOVE BUILDING
+		------------------------------------------------------------------ */}
         <div>
           <Reveal direction="left">
             <SubHeading icon={Sparkles} title="The Work I Love" />
@@ -561,8 +563,8 @@ export default function About() {
         </div>
 
         {/* ------------------------------------------------------------------
-            4. BEYOND THE CODE (hobbies & interests)
-        ------------------------------------------------------------------ */}
+			4. BEYOND THE CODE (hobbies & interests)
+		------------------------------------------------------------------ */}
         <div>
           <Reveal direction="left">
             <SubHeading icon={Lightbulb} title="Beyond the Code" />
@@ -601,8 +603,8 @@ export default function About() {
         </div>
 
         {/* ------------------------------------------------------------------
-            5. TECH MARQUEE
-        ------------------------------------------------------------------ */}
+			5. TECH MARQUEE
+		------------------------------------------------------------------ */}
         <Reveal direction="up">
           <p className="text-center text-xs sm:text-sm font-medium uppercase tracking-[0.25em] text-slate-400 mb-6">
             My everyday toolkit
