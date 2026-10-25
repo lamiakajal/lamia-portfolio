@@ -484,7 +484,11 @@
   width: min(560px, 130vw);
   height: min(560px, 130vw);
   border-radius: 9999px;
-  background: radial-gradient(circle, var(--spotlight) 0%, transparent 62%);
+  background: radial-gradient(
+    circle,
+    var(--spotlight) 0%,
+    transparent 62%
+  );
   opacity: 0;
   transition: opacity 0.5s ease;
   will-change: transform, opacity;
@@ -508,11 +512,7 @@
   height: 90px;
   border-radius: 9999px;
   border: 2px solid rgba(244, 114, 182, 0.8);
-  background: radial-gradient(
-    circle,
-    rgba(236, 72, 153, 0.25),
-    transparent 70%
-  );
+  background: radial-gradient(circle, rgba(236, 72, 153, 0.25), transparent 70%);
   pointer-events: none;
   animation: tapRipple 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
