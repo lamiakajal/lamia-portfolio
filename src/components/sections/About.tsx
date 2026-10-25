@@ -18,7 +18,7 @@ import {
   Layers,
   Sparkles,
   ShieldCheck,
-  Palette,
+  Music,
   PenLine,
   Video,
   Rocket,
@@ -128,9 +128,9 @@ const beyondCode: {
     href: getSocial("medium"),
   },
   {
-    icon: Palette,
-    title: "Design Inspiration",
-    text: "Collecting colour palettes, layouts and ideas that shape how I design.",
+    icon: Music,
+    title: "Music & Fine Arts",
+    text: "I studied music and fine arts at Bulbul Academy of Fine Arts, and that creative side shapes my design taste.",
     href: getSocial("behance"),
   },
   {
@@ -266,8 +266,8 @@ export default function About() {
       {/* Shared container (same width as Navbar, Hero and Footer) */}
       <div className="w-full max-w-6xl mx-auto px-4 xs:px-5 sm:px-6 relative z-10 space-y-20 sm:space-y-28">
         {/* ------------------------------------------------------------------
-			1. HEADER + BIO + PHOTO
-		------------------------------------------------------------------ */}
+            1. HEADER + BIO + PHOTO
+        ------------------------------------------------------------------ */}
         <div>
           <Reveal direction="down">
             <div className="flex flex-col gap-4 items-center text-center mb-12 sm:mb-16">
@@ -351,7 +351,12 @@ export default function About() {
               <div className="grid grid-cols-3 gap-3 sm:gap-4">
                 {stats.map((s, i) => (
                   <Reveal key={s.label} direction="zoom" delay={i * 120}>
-                    <div className="glow-card h-full p-4 sm:p-5 rounded-2xl bg-card border border-line text-center sm:text-left group">
+                    <div
+                      className="glow-card loop-bob h-full p-4 sm:p-5 rounded-2xl bg-card border border-line text-center sm:text-left group"
+                      style={
+                        { "--bob-delay": `${i * 0.5}s` } as React.CSSProperties
+                      }
+                    >
                       <h4
                         className={`text-2xl sm:text-3xl font-extrabold text-strong mb-1 transition-colors group-hover:text-pink-400 ${outfit.className}`}
                       >
@@ -456,8 +461,8 @@ export default function About() {
         </div>
 
         {/* ------------------------------------------------------------------
-			2. JOURNEY TIMELINE + DEVELOPER CODE CARD
-		------------------------------------------------------------------ */}
+            2. JOURNEY TIMELINE + DEVELOPER CODE CARD
+        ------------------------------------------------------------------ */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-14 items-start">
           <div className="lg:col-span-7 min-w-0">
             <Reveal direction="left">
@@ -468,6 +473,13 @@ export default function About() {
               <div className="relative pl-12">
                 {/* Line that draws itself from top to bottom */}
                 <span className="tl-line absolute left-4.25 top-2 bottom-2 w-0.5 rounded-full bg-linear-to-b from-pink-500 via-fuchsia-500 to-transparent" />
+                {/* Glowing light that keeps travelling down the line (loop) */}
+                <span
+                  aria-hidden
+                  className="absolute left-4.25 top-2 bottom-2 w-0.5"
+                >
+                  <span className="tl-pulse" />
+                </span>
 
                 <div className="space-y-8">
                   {journey.map((step, i) => {
@@ -476,10 +488,18 @@ export default function About() {
                       <Reveal key={step.title} direction="left" delay={i * 140}>
                         <div className="relative group">
                           {/* Timeline dot */}
-                          <span className="absolute -left-12 top-0 w-9 h-9 rounded-full bg-chip border-2 border-pink-500/60 flex items-center justify-center text-pink-400 shadow-[0_0_18px_rgba(236,72,153,0.35)] transition-transform duration-300 group-hover:scale-110">
+                          <span className="ring-pulse absolute -left-12 top-0 w-9 h-9 rounded-full bg-chip border-2 border-pink-500/60 flex items-center justify-center text-pink-400 shadow-[0_0_18px_rgba(236,72,153,0.35)] transition-transform duration-300 group-hover:scale-110">
                             <Icon size={16} />
                           </span>
-                          <div className="glow-card p-5 rounded-2xl bg-card border border-line">
+                          <div
+                            className="glow-card loop-bob p-5 rounded-2xl bg-card border border-line"
+                            style={
+                              {
+                                "--bob-delay": `${i * 0.6}s`,
+                                "--bob-dur": "7s",
+                              } as React.CSSProperties
+                            }
+                          >
                             <p className="text-[11px] font-semibold uppercase tracking-widest text-pink-400 mb-1">
                               Step {i + 1}
                             </p>
@@ -504,7 +524,7 @@ export default function About() {
           {/* Developer code card (always dark, like a real editor) */}
           <div className="lg:col-span-5 min-w-0 lg:sticky lg:top-28">
             <Reveal direction="right" delay={100}>
-              <div className="rounded-2xl overflow-hidden border border-pink-500/30 bg-[#0d0618] shadow-2xl shadow-pink-500/15">
+              <div className="spin-border rounded-2xl overflow-hidden border border-pink-500/30 bg-[#0d0618] shadow-2xl shadow-pink-500/15">
                 {/* Window bar */}
                 <div className="flex items-center gap-2 px-4 py-3 border-b border-white/10 bg-white/3">
                   <span className="w-3 h-3 rounded-full bg-[#ff5f57]" />
@@ -532,8 +552,8 @@ export default function About() {
         </div>
 
         {/* ------------------------------------------------------------------
-			3. WHAT I LOVE BUILDING
-		------------------------------------------------------------------ */}
+            3. WHAT I LOVE BUILDING
+        ------------------------------------------------------------------ */}
         <div>
           <Reveal direction="left">
             <SubHeading icon={Sparkles} title="The Work I Love" />
@@ -543,9 +563,23 @@ export default function About() {
               const Icon = item.icon;
               return (
                 <Reveal key={item.title} direction="up" delay={i * 130}>
-                  <div className="glow-card group h-full p-6 rounded-2xl bg-card border border-line">
+                  <div
+                    className="glow-card loop-bob group h-full p-6 rounded-2xl bg-card border border-line"
+                    style={
+                      { "--bob-delay": `${i * 0.7}s` } as React.CSSProperties
+                    }
+                  >
                     <div className="w-12 h-12 mb-4 rounded-xl bg-linear-to-br from-pink-500/20 to-fuchsia-500/20 border border-pink-500/30 flex items-center justify-center text-pink-400 transition-transform duration-500 group-hover:rotate-6 group-hover:scale-110">
-                      <Icon size={22} />
+                      <span
+                        className="icon-breathe flex"
+                        style={
+                          {
+                            "--bob-delay": `${i * 0.4}s`,
+                          } as React.CSSProperties
+                        }
+                      >
+                        <Icon size={22} />
+                      </span>
                     </div>
                     <h4
                       className={`text-lg font-bold text-strong mb-2 ${outfit.className}`}
@@ -563,8 +597,8 @@ export default function About() {
         </div>
 
         {/* ------------------------------------------------------------------
-			4. BEYOND THE CODE (hobbies & interests)
-		------------------------------------------------------------------ */}
+            4. BEYOND THE CODE (hobbies & interests)
+        ------------------------------------------------------------------ */}
         <div>
           <Reveal direction="left">
             <SubHeading icon={Lightbulb} title="Beyond the Code" />
@@ -578,7 +612,13 @@ export default function About() {
                     href={item.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="glow-card group relative block h-full p-6 rounded-2xl bg-card border border-line overflow-hidden"
+                    className="glow-card loop-bob group relative block h-full p-6 rounded-2xl bg-card border border-line overflow-hidden"
+                    style={
+                      {
+                        "--bob-delay": `${i * 0.55}s`,
+                        "--bob-dur": "6.5s",
+                      } as React.CSSProperties
+                    }
                   >
                     <ArrowUpRight
                       size={16}
@@ -603,8 +643,8 @@ export default function About() {
         </div>
 
         {/* ------------------------------------------------------------------
-			5. TECH MARQUEE
-		------------------------------------------------------------------ */}
+            5. TECH MARQUEE
+        ------------------------------------------------------------------ */}
         <Reveal direction="up">
           <p className="text-center text-xs sm:text-sm font-medium uppercase tracking-[0.25em] text-slate-400 mb-6">
             My everyday toolkit

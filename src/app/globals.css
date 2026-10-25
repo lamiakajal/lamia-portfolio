@@ -690,3 +690,150 @@ html[data-preloading="true"] .nav-drop {
     animation: none;
   }
 }
+
+/* ==========================================================================
+   8. LOOPING (CONTINUOUS) ANIMATIONS - used in every section
+   They use the `translate` / `scale` CSS properties or pseudo elements, so they
+   never fight with hover transforms (which use `transform`).
+   ========================================================================== */
+
+/* Cards gently float up and down (set --bob-delay / --bob-dur inline for variety) */
+@keyframes bobTranslate {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 -7px;
+  }
+}
+.loop-bob {
+  animation: bobTranslate var(--bob-dur, 6s) ease-in-out infinite;
+  animation-delay: var(--bob-delay, 0s);
+}
+
+/* Icons softly breathe */
+@keyframes iconBreathe {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.12);
+  }
+}
+.icon-breathe {
+  animation: iconBreathe 3.4s ease-in-out infinite;
+  animation-delay: var(--bob-delay, 0s);
+}
+
+/* Expanding ring around timeline dots */
+@keyframes ringPulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1.9);
+    opacity: 0;
+  }
+}
+.ring-pulse::after {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  border: 2px solid rgba(244, 114, 182, 0.7);
+  animation: ringPulse 2.4s ease-out infinite;
+  pointer-events: none;
+}
+
+/* A glowing light that travels down a timeline line, again and again */
+@keyframes tlTravel {
+  0% {
+    top: 0;
+    opacity: 0;
+  }
+  12% {
+    opacity: 1;
+  }
+  88% {
+    opacity: 1;
+  }
+  100% {
+    top: 100%;
+    opacity: 0;
+  }
+}
+.tl-pulse {
+  position: absolute;
+  left: 50%;
+  width: 10px;
+  height: 10px;
+  margin-left: -5px;
+  border-radius: 9999px;
+  background: #f9a8d4;
+  box-shadow: 0 0 14px 4px rgba(244, 114, 182, 0.8);
+  animation: tlTravel 5.5s ease-in-out infinite;
+}
+
+/* Rotating gradient border (modern browsers; falls back to a normal border) */
+@property --angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+@keyframes spinAngle {
+  to {
+    --angle: 360deg;
+  }
+}
+.spin-border {
+  position: relative;
+}
+.spin-border::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: conic-gradient(
+    from var(--angle),
+    transparent 0 55%,
+    #f472b6 78%,
+    #d946ef 90%,
+    transparent 100%
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: spinAngle 4s linear infinite;
+  pointer-events: none;
+}
+
+/* Soft pulsing glow on the active tab / highlighted cards */
+@keyframes softGlow {
+  0%,
+  100% {
+    box-shadow: 0 10px 30px -14px rgba(236, 72, 153, 0.45);
+  }
+  50% {
+    box-shadow: 0 14px 44px -10px rgba(236, 72, 153, 0.8);
+  }
+}
+.loop-glow {
+  animation: softGlow 3s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loop-bob,
+  .icon-breathe,
+  .ring-pulse::after,
+  .tl-pulse,
+  .spin-border::before,
+  .loop-glow {
+    animation: none;
+  }
+}
