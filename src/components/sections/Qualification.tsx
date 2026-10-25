@@ -43,7 +43,7 @@ interface EducationItem {
   icon: LucideIcon;
   title: string;
   institution?: string;
-  /** Class range or level, e.g. "Class 11 - 12" */
+  /** Education level label, e.g. "College", "Primary", "University" */
   level?: string;
   status?: "Ongoing" | "Completed";
   text?: string;
@@ -56,7 +56,7 @@ const academic: EducationItem[] = [
     icon: GraduationCap,
     title: "Bachelor of Business Administration (Honours)",
     institution: "Govt. Shaheed Suhrawardy College",
-    level: "BBA (Honours)",
+    level: "University",
     status: "Ongoing",
     text: "Studying Business Administration alongside my development work. It gives me a solid foundation in how businesses run, which helps me understand the business side of every product I build.",
     tags: ["Business Administration", "Honours Programme"],
@@ -65,28 +65,28 @@ const academic: EducationItem[] = [
     icon: BookOpen,
     title: "Higher Secondary Certificate (HSC)",
     institution: "Rokeya Ahsan College",
-    level: "Class 11 - 12",
+    level: "College",
     status: "Completed",
   },
   {
     icon: School,
     title: "Secondary School Certificate (SSC) & Junior Level",
     institution: "Bamoil Ideal High School and College",
-    level: "Class 5 - 10",
+    level: "High School",
     status: "Completed",
   },
   {
     icon: Backpack,
     title: "Primary Education",
     institution: "Moniza Rahman Girls' High School & College",
-    level: "Class 1 - 4",
+    level: "Primary",
     status: "Completed",
   },
   {
     icon: Baby,
     title: "Early Childhood Education",
     institution: "World Sign International School",
-    level: "Playgroup",
+    level: "Elementary (Pre-School)",
     status: "Completed",
   },
 ];
@@ -152,11 +152,19 @@ function GroupHeading({
 }
 
 // One education card (used in the timeline and in the grids)
-function EduCard({ item }: { item: EducationItem }) {
+function EduCard({ item, index = 0 }: { item: EducationItem; index?: number }) {
   const ongoing = item.status === "Ongoing";
 
   return (
-    <div className="glow-card group relative h-full p-6 rounded-2xl bg-card border border-line overflow-hidden">
+    <div
+      className="glow-card loop-bob group relative h-full p-6 rounded-2xl bg-card border border-line overflow-hidden"
+      style={
+        {
+          "--bob-delay": `${(index % 5) * 0.5}s`,
+          "--bob-dur": `${6 + (index % 3) * 0.7}s`,
+        } as React.CSSProperties
+      }
+    >
       {/* Soft glow that appears on hover */}
       <span className="absolute -top-12 -right-12 w-32 h-32 rounded-full bg-pink-500/20 blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
@@ -274,6 +282,13 @@ export default function Education() {
             <div className="relative">
               {/* Line that draws itself from top to bottom */}
               <span className="tl-line absolute left-4.25 lg:left-1/2 lg:-ml-px top-2 bottom-2 w-0.5 rounded-full bg-linear-to-b from-pink-500 via-fuchsia-500 to-transparent" />
+              {/* Glowing light that keeps travelling down the line (loop) */}
+              <span
+                aria-hidden
+                className="absolute left-4.25 lg:left-1/2 lg:-ml-px top-2 bottom-2 w-0.5"
+              >
+                <span className="tl-pulse" />
+              </span>
 
               <div className="space-y-10 lg:space-y-14">
                 {academic.map((item, i) => {
@@ -287,7 +302,7 @@ export default function Education() {
                     >
                       <div className="relative grid grid-cols-1 lg:grid-cols-2 lg:gap-x-20">
                         {/* Timeline dot */}
-                        <span className="absolute left-0 lg:left-1/2 lg:-translate-x-1/2 top-0 z-10 w-9 h-9 rounded-full bg-chip border-2 border-pink-500/60 flex items-center justify-center text-pink-400 shadow-[0_0_18px_rgba(236,72,153,0.35)]">
+                        <span className="ring-pulse absolute left-0 lg:left-1/2 lg:-translate-x-1/2 top-0 z-10 w-9 h-9 rounded-full bg-chip border-2 border-pink-500/60 flex items-center justify-center text-pink-400 shadow-[0_0_18px_rgba(236,72,153,0.35)]">
                           <Icon size={16} />
                         </span>
 
@@ -297,7 +312,7 @@ export default function Education() {
                             onLeft ? "lg:col-start-1" : "lg:col-start-2"
                           }`}
                         >
-                          <EduCard item={item} />
+                          <EduCard item={item} index={i} />
                         </div>
                       </div>
                     </Reveal>
@@ -318,7 +333,7 @@ export default function Education() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
             {professional.map((item, i) => (
               <Reveal key={item.title} direction="up" delay={i * 130}>
-                <EduCard item={item} />
+                <EduCard item={item} index={i + 1} />
               </Reveal>
             ))}
           </div>
@@ -337,7 +352,7 @@ export default function Education() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
             {cultural.map((item, i) => (
               <Reveal key={item.title} direction="zoom" delay={i * 130}>
-                <EduCard item={item} />
+                <EduCard item={item} index={i + 2} />
               </Reveal>
             ))}
           </div>

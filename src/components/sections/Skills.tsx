@@ -14,23 +14,28 @@ import { Outfit } from "next/font/google";
 import {
   Wrench,
   LayoutGrid,
-  Layout,
-  Palette,
-  Braces,
-  FileCode2,
-  Atom,
-  Globe,
-  Wind,
   Server,
-  Database,
-  Blocks,
-  KeyRound,
-  GitBranch,
   Brain,
   Bot,
   Monitor,
   type LucideIcon,
 } from "lucide-react";
+// Original brand logos (Simple Icons + Font Awesome via react-icons)
+import {
+  SiHtml5,
+  SiJavascript,
+  SiTypescript,
+  SiReact,
+  SiNextdotjs,
+  SiTailwindcss,
+  SiNodedotjs,
+  SiMongodb,
+  SiMongoose,
+  SiBetterauth,
+  SiGit,
+  SiGithub,
+} from "react-icons/si";
+import { FaCss3Alt } from "react-icons/fa";
 import Reveal from "@/components/ui/Reveal";
 import AnimatedCounter from "@/components/ui/AnimatedCounter";
 import Typewriter from "@/components/ui/Typewriter";
@@ -47,12 +52,20 @@ const outfit = Outfit({
 
 type CategoryId = "frontend" | "backend" | "tools";
 
+// Any icon component that accepts a size (works for lucide-react and react-icons)
+type IconComponent = React.ComponentType<{ size?: number | string }>;
+
 interface Skill {
   name: string;
-  icon: LucideIcon;
+  icon: IconComponent;
+  /** Original brand colour. Logos that are black/white use the theme text colour. */
+  color: string;
   category: CategoryId;
   text: string;
 }
+
+// Used for logos that are black (dark mode needs white, light mode needs dark)
+const ADAPTIVE = "var(--fg-strong)";
 
 const categories: {
   id: CategoryId | "all";
@@ -90,87 +103,108 @@ const skills: Skill[] = [
   // Frontend
   {
     name: "HTML",
-    icon: Layout,
+    icon: SiHtml5,
+    color: "#E34F26",
     category: "frontend",
     text: "Semantic, accessible page structure.",
   },
   {
     name: "CSS",
-    icon: Palette,
+    icon: FaCss3Alt,
+    color: "#1572B6",
     category: "frontend",
     text: "Responsive layouts, animations and theming.",
   },
   {
     name: "JavaScript",
-    icon: Braces,
+    icon: SiJavascript,
+    color: "#F7DF1E",
     category: "frontend",
     text: "Modern ES6+ for interactive interfaces.",
   },
   {
     name: "TypeScript",
-    icon: FileCode2,
+    icon: SiTypescript,
+    color: "#3178C6",
     category: "frontend",
     text: "Type-safe code that scales with the project.",
   },
   {
     name: "React",
-    icon: Atom,
+    icon: SiReact,
+    color: "#61DAFB",
     category: "frontend",
     text: "Component-driven, reusable user interfaces.",
   },
   {
     name: "Next.js",
-    icon: Globe,
+    icon: SiNextdotjs,
+    color: ADAPTIVE,
     category: "frontend",
     text: "App Router, server rendering and fast full-stack apps.",
   },
   {
     name: "Tailwind CSS",
-    icon: Wind,
+    icon: SiTailwindcss,
+    color: "#06B6D4",
     category: "frontend",
     text: "Rapid, consistent and responsive styling.",
   },
   // Backend & data
   {
     name: "Node.js",
-    icon: Server,
+    icon: SiNodedotjs,
+    color: "#5FA04E",
     category: "backend",
     text: "Fast, scalable server-side JavaScript.",
   },
   {
     name: "MongoDB",
-    icon: Database,
+    icon: SiMongodb,
+    color: "#47A248",
     category: "backend",
     text: "Flexible document database design.",
   },
   {
     name: "Mongoose",
-    icon: Blocks,
+    icon: SiMongoose,
+    color: "#E5484D",
     category: "backend",
     text: "Schemas, models and validation for MongoDB.",
   },
   {
     name: "BetterAuth",
-    icon: KeyRound,
+    icon: SiBetterauth,
+    color: ADAPTIVE,
     category: "backend",
     text: "Secure authentication and user sessions.",
   },
   // Tools & AI
   {
-    name: "Git & GitHub",
-    icon: GitBranch,
+    name: "Git",
+    icon: SiGit,
+    color: "#F05032",
     category: "tools",
-    text: "Version control, branches and collaboration.",
+    text: "Version control, branches and clean history.",
+  },
+  {
+    name: "GitHub",
+    icon: SiGithub,
+    color: ADAPTIVE,
+    category: "tools",
+    text: "Collaboration, pull requests and code hosting.",
   },
   {
     name: "AI Mindset & Engineering",
     icon: Brain,
+    color: "#F472B6",
     category: "tools",
     text: "Planning and building with AI as a partner.",
   },
   {
     name: "AI-Assisted Coding",
     icon: Bot,
+    color: "#D946EF",
     category: "tools",
     text: "Shipping faster while owning the quality.",
   },
@@ -257,7 +291,7 @@ export default function Skills() {
                   onClick={() => setActive(cat.id)}
                   className={`group relative w-full h-full text-left p-4 sm:p-5 rounded-2xl border overflow-hidden transition-all duration-300 hover:-translate-y-1 active:scale-95 ${
                     isActive
-                      ? "bg-pink-500/15 border-pink-500/60 shadow-[0_10px_35px_-12px_rgba(236,72,153,0.6)]"
+                      ? "spin-border loop-glow bg-pink-500/15 border-pink-500/60"
                       : "bg-card border-line hover:border-pink-500/40"
                   }`}
                 >
@@ -309,19 +343,50 @@ export default function Skills() {
           >
             {visible.map((skill, i) => {
               const Icon = skill.icon;
+              // Tinted tile + glow use the technology's own brand colour
+              const tileStyle: React.CSSProperties = {
+                color: skill.color,
+                background: `color-mix(in srgb, ${skill.color} 14%, transparent)`,
+                borderColor: `color-mix(in srgb, ${skill.color} 40%, transparent)`,
+              };
               return (
                 <div
                   key={skill.name}
                   className="skill-pop"
                   style={{ "--i": i } as React.CSSProperties}
                 >
-                  <div className="glow-card group relative h-full p-5 rounded-2xl bg-card border border-line overflow-hidden">
-                    {/* Soft glow that appears on hover */}
-                    <span className="absolute -top-10 -right-10 w-28 h-28 rounded-full bg-pink-500/20 blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+                  <div
+                    className="glow-card loop-bob group relative h-full p-5 rounded-2xl bg-card border border-line overflow-hidden"
+                    style={
+                      {
+                        "--bob-delay": `${(i % 6) * 0.45}s`,
+                        "--bob-dur": `${5.5 + (i % 4) * 0.6}s`,
+                      } as React.CSSProperties
+                    }
+                  >
+                    {/* Soft glow in the brand colour that appears on hover */}
+                    <span
+                      className="absolute -top-10 -right-10 w-28 h-28 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                      style={{
+                        background: `color-mix(in srgb, ${skill.color} 35%, transparent)`,
+                      }}
+                    />
 
                     <div className="relative flex items-start justify-between mb-4">
-                      <span className="w-12 h-12 rounded-xl bg-linear-to-br from-pink-500/20 to-fuchsia-500/20 border border-pink-500/30 flex items-center justify-center text-pink-400 transition-transform duration-500 group-hover:rotate-6 group-hover:scale-110">
-                        <Icon size={22} />
+                      <span
+                        className="w-14 h-14 rounded-2xl border flex items-center justify-center transition-transform duration-500 group-hover:rotate-6 group-hover:scale-110"
+                        style={tileStyle}
+                      >
+                        <span
+                          className="icon-breathe flex"
+                          style={
+                            {
+                              "--bob-delay": `${(i % 5) * 0.3}s`,
+                            } as React.CSSProperties
+                          }
+                        >
+                          <Icon size={28} />
+                        </span>
                       </span>
                       <span className="text-[10px] font-semibold uppercase tracking-widest text-slate-500 group-hover:text-pink-400 transition-colors">
                         {categoryLabel[skill.category]}
