@@ -338,7 +338,10 @@ export default function Hero() {
               className="hero-reveal text-sm sm:text-base text-slate-300 max-w-xl mx-auto lg:mx-0 leading-relaxed font-normal"
               style={{ "--d": "700ms" } as React.CSSProperties}
             >
-              I design and build modern full-stack web applications, from pixel-perfect, responsive interfaces to secure back-end APIs, using Next.js, TypeScript, React, Node.js, MongoDB and Tailwind CSS.
+              I design and build modern full-stack web applications, from
+              pixel-perfect, responsive interfaces to secure back-end APIs,
+              using Next.js, TypeScript, React, Node.js, MongoDB and Tailwind
+              CSS.
             </p>
 
             <div
@@ -405,7 +408,7 @@ export default function Hero() {
                 {/* Profile Image */}
                 <div className="relative z-10 w-56 sm:w-68 lg:w-76 h-56 sm:h-68 lg:h-76 rounded-full overflow-hidden border-4 border-pink-500/50 shadow-2xl shadow-pink-500/30 bg-slate-900">
                   <Image
-                    src="/assets/profile.jpg"
+                    src="/assets/lamiakajal-hero.png"
                     alt="Lamia Kajal"
                     fill
                     sizes="(max-width: 640px) 224px, (max-width: 1024px) 272px, 304px"

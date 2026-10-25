@@ -10,6 +10,7 @@ import About from "@/components/sections/About";
 import Skills from "@/components/sections/Skills";
 import Education from "@/components/sections/Qualification";
 import Projects from "@/components/sections/Projects";
+import Contact from "@/components/sections/Contact";
 
 export default function Home() {
   return (
@@ -27,7 +28,10 @@ export default function Home() {
       {/* Projects Section */}
       <Projects />
 
-      {/* Future sections (Contact, Blog) will be added here */}
+      {/* Contact Section */}
+      <Contact />
+
+      {/* Future sections (Blog) will be added here */}
     </div>
   );
 }
