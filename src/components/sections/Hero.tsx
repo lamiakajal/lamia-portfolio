@@ -280,12 +280,8 @@ export default function Hero() {
         .float-slow { animation: floaty 7s ease-in-out infinite; }
 
         @media (prefers-reduced-motion: reduce) {
+          /* Only the entrance animation is simplified; loops keep running on purpose */
           .hero-reveal, .hero-pop { animation: none; opacity: 1; filter: none; transform: none; }
-          .name-gradient, .cta-shine::after, .scroll-nudge, .float-slow, .type-cursor { animation: none; }
-          .orbit-item {
-            animation: none;
-            transform: rotate(var(--start)) translateX(var(--orbit-r)) rotate(calc(var(--start) * -1));
-          }
         }
       `,
         }}
@@ -342,10 +338,7 @@ export default function Hero() {
               className="hero-reveal text-sm sm:text-base text-slate-300 max-w-xl mx-auto lg:mx-0 leading-relaxed font-normal"
               style={{ "--d": "700ms" } as React.CSSProperties}
             >
-              I design and build modern full-stack web applications, from
-              pixel-perfect, responsive interfaces to secure back-end APIs,
-              using Next.js, TypeScript, React, Node.js, MongoDB and Tailwind
-              CSS.
+              I design and build modern full-stack web applications, from pixel-perfect, responsive interfaces to secure back-end APIs, using Next.js, TypeScript, React, Node.js, MongoDB and Tailwind CSS.
             </p>
 
             <div

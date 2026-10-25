@@ -116,7 +116,7 @@ export default function Footer() {
           >
             <div className="py-2 inline-block">
               <Link
-                href="#home"
+                href="/#home"
                 className={`text-xl font-bold tracking-tight inline-flex items-center justify-center md:justify-start gap-3 group animate-brand-wave ${outfit.className}`}
               >
                 {/* Brand Logo Icon Box */}
@@ -251,10 +251,10 @@ export default function Footer() {
           </p>
 
           <div className="flex items-center space-x-6 flex-wrap justify-center">
-            <Link href="#home" className="hover:text-pink-400 transition">
+            <Link href="/#home" className="hover:text-pink-400 transition">
               Privacy Policy
             </Link>
-            <Link href="#home" className="hover:text-pink-400 transition">
+            <Link href="/#home" className="hover:text-pink-400 transition">
               Terms of Service
             </Link>
             <a

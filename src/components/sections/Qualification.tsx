@@ -344,10 +344,7 @@ export default function Education() {
         ------------------------------------------------------------------ */}
         <div>
           <Reveal direction="left">
-            <GroupHeading
-              icon={Music}
-              title="Co-Curricular & Cultural Education"
-            />
+            <GroupHeading icon={Music} title="Co-Curricular & Cultural Education" />
           </Reveal>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
             {cultural.map((item, i) => (
