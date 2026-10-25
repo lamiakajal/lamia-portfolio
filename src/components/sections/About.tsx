@@ -186,7 +186,8 @@ const codeLines: React.ReactNode[] = [
     <span className="text-[#f9a8d4]">lamia</span> = {"{"}
   </>,
   <>
-    {"  "}role: <span className="text-[#86efac]">&quot;Full Stack Developer&quot;</span>,
+    {"  "}role:{" "}
+    <span className="text-[#86efac]">&quot;Full Stack Developer&quot;</span>,
   </>,
   <>
     {"  "}stack: [<span className="text-[#86efac]">&quot;Next.js&quot;</span>,{" "}
@@ -197,7 +198,8 @@ const codeLines: React.ReactNode[] = [
     <span className="text-[#86efac]">&quot;MongoDB&quot;</span>],
   </>,
   <>
-    {"  "}mindset: <span className="text-[#86efac]">&quot;AI-first, human-led&quot;</span>,
+    {"  "}mindset:{" "}
+    <span className="text-[#86efac]">&quot;AI-first, human-led&quot;</span>,
   </>,
   <>
     {"  "}learning: <span className="text-[#fcd34d]">true</span>,
@@ -296,8 +298,8 @@ export default function About() {
                     Hello! I&apos;m <Hl>Lamia Kajal</Hl>, a{" "}
                     <Hl>Full Stack Developer</Hl> who loves turning ideas into
                     fast, beautiful and genuinely useful web experiences. I
-                    enjoy owning a product from end to end: the interface
-                    people touch, the API behind it and the database that keeps
+                    enjoy owning a product from end to end: the interface people
+                    touch, the API behind it and the database that keeps
                     everything remembered.
                   </p>
                 </Reveal>
@@ -351,7 +353,9 @@ export default function About() {
                   <Reveal key={s.label} direction="zoom" delay={i * 120}>
                     <div
                       className="glow-card loop-bob h-full p-4 sm:p-5 rounded-2xl bg-card border border-line text-center sm:text-left group"
-                      style={{ "--bob-delay": `${i * 0.5}s` } as React.CSSProperties}
+                      style={
+                        { "--bob-delay": `${i * 0.5}s` } as React.CSSProperties
+                      }
                     >
                       <h4
                         className={`text-2xl sm:text-3xl font-extrabold text-strong mb-1 transition-colors group-hover:text-pink-400 ${outfit.className}`}
@@ -414,7 +418,7 @@ export default function About() {
                       className="touch-pan-y tilt-card relative w-full h-full rounded-3xl overflow-hidden border border-line shadow-2xl shadow-pink-500/20 transition-transform duration-200 ease-out will-change-transform"
                     >
                       <Image
-                        src="/assets/profile.jpg"
+                        src="/assets/lamiakajal-about.png"
                         alt="Lamia Kajal - Full Stack Developer"
                         fill
                         sizes="(max-width: 640px) 80vw, (max-width: 1024px) 384px, 33vw"
@@ -470,7 +474,10 @@ export default function About() {
                 {/* Line that draws itself from top to bottom */}
                 <span className="tl-line absolute left-4.25 top-2 bottom-2 w-0.5 rounded-full bg-linear-to-b from-pink-500 via-fuchsia-500 to-transparent" />
                 {/* Glowing light that keeps travelling down the line (loop) */}
-                <span aria-hidden className="absolute left-4.25 top-2 bottom-2 w-0.5">
+                <span
+                  aria-hidden
+                  className="absolute left-4.25 top-2 bottom-2 w-0.5"
+                >
                   <span className="tl-pulse" />
                 </span>
 
@@ -486,7 +493,12 @@ export default function About() {
                           </span>
                           <div
                             className="glow-card loop-bob p-5 rounded-2xl bg-card border border-line"
-                            style={{ "--bob-delay": `${i * 0.6}s`, "--bob-dur": "7s" } as React.CSSProperties}
+                            style={
+                              {
+                                "--bob-delay": `${i * 0.6}s`,
+                                "--bob-dur": "7s",
+                              } as React.CSSProperties
+                            }
                           >
                             <p className="text-[11px] font-semibold uppercase tracking-widest text-pink-400 mb-1">
                               Step {i + 1}
@@ -553,10 +565,19 @@ export default function About() {
                 <Reveal key={item.title} direction="up" delay={i * 130}>
                   <div
                     className="glow-card loop-bob group h-full p-6 rounded-2xl bg-card border border-line"
-                    style={{ "--bob-delay": `${i * 0.7}s` } as React.CSSProperties}
+                    style={
+                      { "--bob-delay": `${i * 0.7}s` } as React.CSSProperties
+                    }
                   >
                     <div className="w-12 h-12 mb-4 rounded-xl bg-linear-to-br from-pink-500/20 to-fuchsia-500/20 border border-pink-500/30 flex items-center justify-center text-pink-400 transition-transform duration-500 group-hover:rotate-6 group-hover:scale-110">
-                      <span className="icon-breathe flex" style={{ "--bob-delay": `${i * 0.4}s` } as React.CSSProperties}>
+                      <span
+                        className="icon-breathe flex"
+                        style={
+                          {
+                            "--bob-delay": `${i * 0.4}s`,
+                          } as React.CSSProperties
+                        }
+                      >
                         <Icon size={22} />
                       </span>
                     </div>
@@ -592,7 +613,12 @@ export default function About() {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="glow-card loop-bob group relative block h-full p-6 rounded-2xl bg-card border border-line overflow-hidden"
-                    style={{ "--bob-delay": `${i * 0.55}s`, "--bob-dur": "6.5s" } as React.CSSProperties}
+                    style={
+                      {
+                        "--bob-delay": `${i * 0.55}s`,
+                        "--bob-dur": "6.5s",
+                      } as React.CSSProperties
+                    }
                   >
                     <ArrowUpRight
                       size={16}

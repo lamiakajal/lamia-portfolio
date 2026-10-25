@@ -58,7 +58,7 @@ export const projectsData: Project[] = [
     id: "1",
     slug: "bazar-dor",
     title: "BazarDor (বাজার দর)",
-    image: "/projects/bazar-dor.png",
+    image: "/projects/bazar-dor.webp",
     category: "Full-Stack Apps",
     featured: true,
     techStack: [
@@ -90,7 +90,7 @@ export const projectsData: Project[] = [
     id: "2",
     slug: "fit-log",
     title: "FitLog: Workout Library & Daily Lift Tracker",
-    image: "/projects/fit-log.png",
+    image: "/projects/fit-log.webp",
     category: "Web Apps",
     featured: true,
     techStack: [
@@ -122,7 +122,7 @@ export const projectsData: Project[] = [
     id: "3",
     slug: "axit-landing-page",
     title: "AXIT: Modern Responsive SaaS Landing Page",
-    image: "/projects/axit-landing-page.png",
+    image: "/projects/axit-landing-page.webp",
     category: "Landing Pages",
     featured: true,
     techStack: ["Next.js", "React", "Tailwind CSS v4", "React Icons", "Vercel"],
@@ -148,7 +148,7 @@ export const projectsData: Project[] = [
     id: "4",
     slug: "lucid-landing-page",
     title: "Lucid: High-Performance SaaS Landing Page",
-    image: "/projects/lucid-landing-page.png",
+    image: "/projects/lucid-landing-page.webp",
     category: "Landing Pages",
     featured: false,
     techStack: ["Next.js", "React", "Tailwind CSS", "React Icons", "Vercel"],
@@ -171,21 +171,34 @@ export const projectsData: Project[] = [
     id: "5",
     slug: "devstack",
     title: "DevStack: Build Your Ideal Dev Stack",
-    image: "/projects/devstack.png",
+    image: "/projects/devstack.webp",
     category: "Web Apps",
     featured: false,
-    // TODO: add the other technologies used in DevStack
-    techStack: ["TypeScript"],
+    techStack: [
+      "React",
+      "TypeScript",
+      "Vite",
+      "Tailwind CSS",
+      "React Toastify",
+      "React Icons",
+    ],
     shortDescription:
-      "An interactive web app to explore, compare and build the ideal development stack for modern software projects.",
+      "An interactive web app to explore, compare and build your ideal development stack for modern software projects.",
     fullDescription:
-      "DevStack is an interactive web app that helps developers explore, compare and build the ideal technology stack for modern software projects. TODO: add more details about its features.",
+      'DevStack is a curated platform where developers explore frontend, backend, database and tooling technologies side by side and assemble their own development stack. Visitors browse technology cards such as React, Vue.js, Svelte, Next.js, Node.js, PostgreSQL, Redis, TypeScript, Tailwind CSS and Docker, each with a category, difficulty level and rating, and add their favourites to a live "Your Stack" sidebar. The app blocks duplicate choices with friendly toast warnings, lets users remove a single technology or clear the whole stack, loads its technology data from a JSON file with a smooth loading state, and stays fully responsive on mobile, tablet and desktop.',
     liveLink: "https://dev-stack-peach-chi.vercel.app",
     githubLink: "https://github.com/lamiakajal/DevStack",
     challenges: [
-      "Presenting many technologies side by side in a clear, easy-to-scan interface.",
+      "Loading the technology data from a JSON file with useEffect and showing a smooth loading state.",
+      "Preventing the same technology from being added twice and warning the user with toast alerts.",
+      "Keeping the live stack sidebar in sync, including single-item and bulk removal.",
+      "Keeping the card grid and sidebar clean and usable on mobile, tablet and desktop.",
     ],
-    futurePlans: ["Add more technologies and ready-made stack templates."],
+    futurePlans: [
+      "Let users save and share their stacks with an account.",
+      "Add a side-by-side comparison view for selected technologies.",
+      "Move the data to a database or API and add more categories.",
+    ],
   },
 ];
 
@@ -239,10 +252,12 @@ export const socialLinks: SocialLink[] = [
   { key: "medium", label: "Medium", href: "https://medium.com/@lamiakajal" },
   { key: "blog", label: "Blog", href: "https://lamiakajal.blogspot.com" },
   {
-    key: "whatsapp",
-    label: "WhatsApp",
-    href: "https://whatsapp.com/lamiakajal",
+    key: "facebook-page",
+    label: "Facebook Page",
+    href: "https://www.facebook.com/lamiakajalofficial",
   },
+  // WhatsApp username link (username: lamiakajal)
+  { key: "whatsapp", label: "WhatsApp", href: "https://wa.me/lamiakajal" },
 ];
 
 /** Quick lookup helper: getSocial("github") -> "https://github.com/lamiakajal" */
@@ -252,6 +267,11 @@ export const getSocial = (key: string): string =>
 export const contactInfo = {
   email: "lamiakajal@gmail.com",
   website: "https://lamiakajal.com",
+  // TODO: MOCK phone number - replace with the real one
+  phone: "+880 1700-000000",
+  // Used for the tel: link (digits and + only) - keep in sync with `phone`
+  phoneHref: "+8801700000000",
+  whatsappUsername: "lamiakajal",
 };
 
 /** Technologies shown in the About marquee (and reused by the Skills section later) */
