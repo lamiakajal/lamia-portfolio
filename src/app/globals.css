@@ -453,27 +453,21 @@
   box-shadow: 0 18px 40px -18px rgba(236, 72, 153, 0.45);
 }
 
-/* Respect users who prefer less motion */
+/* Reduced-motion devices (e.g. phones with "Remove animations" / battery saver):
+   the gentle loop animations keep running on purpose, because the site design relies
+   on them. Only the big travelling effects are simplified: scroll reveals become a
+   soft fade and the fast marquee stops. */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
   }
-  .animate-orb-1,
-  .animate-orb-2,
-  .animate-pulse-glow,
-  .animate-fadeIn,
-  .animate-gradient-flow,
-  .float-y,
-  .marquee-track,
-  .btn-shine::after,
-  .caret-blink {
+  .marquee-track {
     animation: none;
   }
   .reveal {
-    opacity: 1;
     filter: none;
     transform: none;
-    transition: none;
+    transition: opacity 0.7s ease var(--reveal-delay, 0ms);
   }
   .tl-line {
     transform: scaleY(1);
@@ -649,13 +643,6 @@ html[data-preloading="true"] .nav-drop {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .scroll-top-bounce,
-  .pl-orbit,
-  .pl-orbit-reverse,
-  .pl-bar-shine,
-  .type-cursor {
-    animation: none;
-  }
   .pl-letter,
   .pl-fade {
     opacity: 1;
@@ -684,12 +671,6 @@ html[data-preloading="true"] .nav-drop {
   animation: skillPop 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
   animation-delay: calc(var(--i, 0) * 60ms);
 }
-@media (prefers-reduced-motion: reduce) {
-  .skill-pop {
-    opacity: 1;
-    animation: none;
-  }
-}
 
 /* ==========================================================================
    8. LOOPING (CONTINUOUS) ANIMATIONS - used in every section
@@ -704,7 +685,7 @@ html[data-preloading="true"] .nav-drop {
     translate: 0 0;
   }
   50% {
-    translate: 0 -7px;
+    translate: 0 var(--bob-amp, -7px);
   }
 }
 .loop-bob {
@@ -827,13 +808,62 @@ html[data-preloading="true"] .nav-drop {
   animation: softGlow 3s ease-in-out infinite;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .loop-bob,
-  .icon-breathe,
-  .ring-pulse::after,
-  .tl-pulse,
-  .spin-border::before,
-  .loop-glow {
-    animation: none;
+/* Pause a card's hover-affected loop while the mouse is over it (mouse devices only,
+   so touch screens never get stuck in a paused state after a tap) */
+@media (hover: hover) {
+  .loop-bob:hover {
+    animation-play-state: paused;
   }
+}
+
+/* Save battery / GPU: loops pause while their section is outside the screen
+   and resume automatically when it scrolls back into view */
+.reveal:not([data-visible="true"]) .loop-bob,
+.reveal:not([data-visible="true"]) .icon-breathe,
+.reveal:not([data-visible="true"]) .tl-pulse,
+.reveal:not([data-visible="true"]) .loop-glow,
+.reveal:not([data-visible="true"]) .ring-pulse::after,
+.reveal:not([data-visible="true"]) .spin-border::before {
+  animation-play-state: paused;
+}
+
+/* Phones: smaller float distance and lighter blur so loops stay smooth */
+@media (max-width: 767.98px) {
+  .loop-bob {
+    --bob-amp: -5px;
+  }
+  .blur-\[100px\],
+  .blur-\[120px\],
+  .blur-\[130px\],
+  .blur-\[140px\],
+  .blur-\[150px\] {
+    --tw-blur: blur(60px);
+  }
+}
+
+/* Project screenshots: the image scrolls top -> bottom -> top inside its browser frame.
+   `100cqh` = height of .shot-frame; `min(0px, ...)` keeps short images still. */
+.shot-frame {
+  container-type: size;
+}
+@keyframes shotScroll {
+  0%,
+  10% {
+    transform: translateY(0);
+  }
+  48%,
+  58% {
+    transform: translateY(min(0px, calc(-100% + 100cqh)));
+  }
+  96%,
+  100% {
+    transform: translateY(0);
+  }
+}
+.shot-scroll {
+  animation: shotScroll 18s ease-in-out infinite;
+  will-change: transform;
+}
+.reveal:not([data-visible="true"]) .shot-scroll {
+  animation-play-state: paused;
 }

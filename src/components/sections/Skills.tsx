@@ -73,141 +73,31 @@ const categories: {
   icon: LucideIcon;
   text: string;
 }[] = [
-  {
-    id: "all",
-    label: "All Skills",
-    icon: LayoutGrid,
-    text: "Everything I use",
-  },
-  {
-    id: "frontend",
-    label: "Frontend",
-    icon: Monitor,
-    text: "Interfaces & motion",
-  },
-  {
-    id: "backend",
-    label: "Backend & Data",
-    icon: Server,
-    text: "APIs, data & auth",
-  },
-  {
-    id: "tools",
-    label: "Tools & AI",
-    icon: Wrench,
-    text: "Workflow & mindset",
-  },
+  { id: "all", label: "All Skills", icon: LayoutGrid, text: "Everything I use" },
+  { id: "frontend", label: "Frontend", icon: Monitor, text: "Interfaces & motion" },
+  { id: "backend", label: "Backend & Data", icon: Server, text: "APIs, data & auth" },
+  { id: "tools", label: "Tools & AI", icon: Wrench, text: "Workflow & mindset" },
 ];
 
 const skills: Skill[] = [
   // Frontend
-  {
-    name: "HTML",
-    icon: SiHtml5,
-    color: "#E34F26",
-    category: "frontend",
-    text: "Semantic, accessible page structure.",
-  },
-  {
-    name: "CSS",
-    icon: FaCss3Alt,
-    color: "#1572B6",
-    category: "frontend",
-    text: "Responsive layouts, animations and theming.",
-  },
-  {
-    name: "JavaScript",
-    icon: SiJavascript,
-    color: "#F7DF1E",
-    category: "frontend",
-    text: "Modern ES6+ for interactive interfaces.",
-  },
-  {
-    name: "TypeScript",
-    icon: SiTypescript,
-    color: "#3178C6",
-    category: "frontend",
-    text: "Type-safe code that scales with the project.",
-  },
-  {
-    name: "React",
-    icon: SiReact,
-    color: "#61DAFB",
-    category: "frontend",
-    text: "Component-driven, reusable user interfaces.",
-  },
-  {
-    name: "Next.js",
-    icon: SiNextdotjs,
-    color: ADAPTIVE,
-    category: "frontend",
-    text: "App Router, server rendering and fast full-stack apps.",
-  },
-  {
-    name: "Tailwind CSS",
-    icon: SiTailwindcss,
-    color: "#06B6D4",
-    category: "frontend",
-    text: "Rapid, consistent and responsive styling.",
-  },
+  { name: "HTML", icon: SiHtml5, color: "#E34F26", category: "frontend", text: "Semantic, accessible page structure." },
+  { name: "CSS", icon: FaCss3Alt, color: "#1572B6", category: "frontend", text: "Responsive layouts, animations and theming." },
+  { name: "JavaScript", icon: SiJavascript, color: "#F7DF1E", category: "frontend", text: "Modern ES6+ for interactive interfaces." },
+  { name: "TypeScript", icon: SiTypescript, color: "#3178C6", category: "frontend", text: "Type-safe code that scales with the project." },
+  { name: "React", icon: SiReact, color: "#61DAFB", category: "frontend", text: "Component-driven, reusable user interfaces." },
+  { name: "Next.js", icon: SiNextdotjs, color: ADAPTIVE, category: "frontend", text: "App Router, server rendering and fast full-stack apps." },
+  { name: "Tailwind CSS", icon: SiTailwindcss, color: "#06B6D4", category: "frontend", text: "Rapid, consistent and responsive styling." },
   // Backend & data
-  {
-    name: "Node.js",
-    icon: SiNodedotjs,
-    color: "#5FA04E",
-    category: "backend",
-    text: "Fast, scalable server-side JavaScript.",
-  },
-  {
-    name: "MongoDB",
-    icon: SiMongodb,
-    color: "#47A248",
-    category: "backend",
-    text: "Flexible document database design.",
-  },
-  {
-    name: "Mongoose",
-    icon: SiMongoose,
-    color: "#E5484D",
-    category: "backend",
-    text: "Schemas, models and validation for MongoDB.",
-  },
-  {
-    name: "BetterAuth",
-    icon: SiBetterauth,
-    color: ADAPTIVE,
-    category: "backend",
-    text: "Secure authentication and user sessions.",
-  },
+  { name: "Node.js", icon: SiNodedotjs, color: "#5FA04E", category: "backend", text: "Fast, scalable server-side JavaScript." },
+  { name: "MongoDB", icon: SiMongodb, color: "#47A248", category: "backend", text: "Flexible document database design." },
+  { name: "Mongoose", icon: SiMongoose, color: "#E5484D", category: "backend", text: "Schemas, models and validation for MongoDB." },
+  { name: "BetterAuth", icon: SiBetterauth, color: ADAPTIVE, category: "backend", text: "Secure authentication and user sessions." },
   // Tools & AI
-  {
-    name: "Git",
-    icon: SiGit,
-    color: "#F05032",
-    category: "tools",
-    text: "Version control, branches and clean history.",
-  },
-  {
-    name: "GitHub",
-    icon: SiGithub,
-    color: ADAPTIVE,
-    category: "tools",
-    text: "Collaboration, pull requests and code hosting.",
-  },
-  {
-    name: "AI Mindset & Engineering",
-    icon: Brain,
-    color: "#F472B6",
-    category: "tools",
-    text: "Planning and building with AI as a partner.",
-  },
-  {
-    name: "AI-Assisted Coding",
-    icon: Bot,
-    color: "#D946EF",
-    category: "tools",
-    text: "Shipping faster while owning the quality.",
-  },
+  { name: "Git", icon: SiGit, color: "#F05032", category: "tools", text: "Version control, branches and clean history." },
+  { name: "GitHub", icon: SiGithub, color: ADAPTIVE, category: "tools", text: "Collaboration, pull requests and code hosting." },
+  { name: "AI Mindset & Engineering", icon: Brain, color: "#F472B6", category: "tools", text: "Planning and building with AI as a partner." },
+  { name: "AI-Assisted Coding", icon: Bot, color: "#D946EF", category: "tools", text: "Shipping faster while owning the quality." },
 ];
 
 const learningLines = [
@@ -233,9 +123,7 @@ export default function Skills() {
     active === "all" ? skills : skills.filter((s) => s.category === active);
 
   const countFor = (id: CategoryId | "all") =>
-    id === "all"
-      ? skills.length
-      : skills.filter((s) => s.category === id).length;
+    id === "all" ? skills.length : skills.filter((s) => s.category === id).length;
 
   return (
     <section

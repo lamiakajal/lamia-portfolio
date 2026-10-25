@@ -9,6 +9,7 @@ import Hero from "@/components/sections/Hero";
 import About from "@/components/sections/About";
 import Skills from "@/components/sections/Skills";
 import Education from "@/components/sections/Qualification";
+import Projects from "@/components/sections/Projects";
 
 export default function Home() {
   return (
@@ -23,7 +24,10 @@ export default function Home() {
       {/* Education Section */}
       <Education />
 
-      {/* Future sections (Projects, Contact) will be added here */}
+      {/* Projects Section */}
+      <Projects />
+
+      {/* Future sections (Contact, Blog) will be added here */}
     </div>
   );
 }

@@ -9,6 +9,7 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Menu, X, ArrowRight, Code2, Sparkles } from "lucide-react";
 import { Outfit } from "next/font/google";
 import ThemeToggle from "@/components/ui/ThemeToggle";
@@ -32,7 +33,12 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [progress, setProgress] = useState(0);
-  const [active, setActive] = useState("home");
+  const [spyActive, setSpyActive] = useState("home");
+  const pathname = usePathname();
+
+  // Multi-page site: on any page except the landing page, links go to "/#section"
+  // On project pages the "Projects" link stays highlighted.
+  const active = pathname.startsWith("/projects") ? "projects" : spyActive;
 
   const toggleMenu = () => setIsOpen((v) => !v);
   const closeMenu = () => setIsOpen(false);
@@ -66,14 +72,15 @@ export default function Navbar() {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting) setActive(entry.target.id);
+          if (entry.isIntersecting) setSpyActive(entry.target.id);
         });
       },
       { rootMargin: "-45% 0px -50% 0px", threshold: 0 },
     );
     sections.forEach((s) => observer.observe(s));
     return () => observer.disconnect();
-  }, []);
+    // Re-run when the page changes (sections only exist on the landing page)
+  }, [pathname]);
 
   /* Close mobile menu on Escape */
   useEffect(() => {
@@ -111,7 +118,7 @@ export default function Navbar() {
         }
         .nav-drop { animation: navDrop 0.6s cubic-bezier(0.22, 1, 0.36, 1) both; }
         @media (prefers-reduced-motion: reduce) {
-          .nav-cta::after, .nav-drop { animation: none; }
+          .nav-drop { animation: none; }
         }
       `,
         }}
@@ -132,7 +139,7 @@ export default function Navbar() {
       >
         {/* Logo / Brand */}
         <Link
-          href="#home"
+          href="/#home"
           className={`text-xl font-bold tracking-tight flex items-center gap-3 group ${outfit.className}`}
         >
           <div className="relative w-10 h-10 flex items-center justify-center transition-transform duration-500 group-hover:rotate-6 group-hover:scale-105">
@@ -161,7 +168,7 @@ export default function Navbar() {
             return (
               <Link
                 key={l.id}
-                href={`#${l.id}`}
+                href={`/#${l.id}`}
                 aria-current={isActive ? "true" : undefined}
                 className={`relative py-1 transition-colors duration-300 ${
                   isActive
@@ -182,41 +189,41 @@ export default function Navbar() {
 
         {/* Right cluster: theme toggle, desktop CTA and mobile menu button */}
         <div className="flex items-center gap-3">
-        <ThemeToggle />
+          <ThemeToggle />
 
-        {/* Desktop CTA */}
-        <div className="hidden sm:flex items-center">
-          <Link
-            href="#contact"
-            className="nav-cta group relative overflow-hidden inline-flex items-center gap-2 rounded-full bg-linear-to-r from-pink-500/20 via-fuchsia-500/20 to-pink-500/20 border border-pink-500/50 px-5 py-2.5 text-xs font-semibold text-strong transition-all duration-300 shadow-[0_0_20px_rgba(236,72,153,0.3)] hover:shadow-[0_0_30px_rgba(236,72,153,0.6)] hover:scale-105 active:scale-95"
-          >
-            <Sparkles
-              size={14}
-              className="text-pink-400 animate-spin"
-              style={{ animationDuration: "4s" }}
-            />
-            <span>Let&apos;s Talk</span>
-            <ArrowRight
-              size={14}
-              className="text-pink-400 transition-transform duration-300 group-hover:translate-x-1"
-            />
-          </Link>
-        </div>
+          {/* Desktop CTA */}
+          <div className="hidden sm:flex items-center">
+            <Link
+              href="/#contact"
+              className="nav-cta group relative overflow-hidden inline-flex items-center gap-2 rounded-full bg-linear-to-r from-pink-500/20 via-fuchsia-500/20 to-pink-500/20 border border-pink-500/50 px-5 py-2.5 text-xs font-semibold text-strong transition-all duration-300 shadow-[0_0_20px_rgba(236,72,153,0.3)] hover:shadow-[0_0_30px_rgba(236,72,153,0.6)] hover:scale-105 active:scale-95"
+            >
+              <Sparkles
+                size={14}
+                className="text-pink-400 animate-spin"
+                style={{ animationDuration: "4s" }}
+              />
+              <span>Let&apos;s Talk</span>
+              <ArrowRight
+                size={14}
+                className="text-pink-400 transition-transform duration-300 group-hover:translate-x-1"
+              />
+            </Link>
+          </div>
 
-        {/* Mobile Menu Toggle */}
-        <button
-          onClick={toggleMenu}
-          className="md:hidden text-slate-300 hover:text-pink-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-pink-400 rounded p-1 transition-transform duration-300 active:scale-90"
-          aria-label="Toggle Menu"
-          aria-expanded={isOpen}
-          aria-controls="mobile-menu"
-        >
-          <span
-            className={`block transition-transform duration-300 ${isOpen ? "rotate-90" : "rotate-0"}`}
+          {/* Mobile Menu Toggle */}
+          <button
+            onClick={toggleMenu}
+            className="md:hidden text-slate-300 hover:text-pink-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-pink-400 rounded p-1 transition-transform duration-300 active:scale-90"
+            aria-label="Toggle Menu"
+            aria-expanded={isOpen}
+            aria-controls="mobile-menu"
           >
-            {isOpen ? <X size={24} /> : <Menu size={24} />}
-          </span>
-        </button>
+            <span
+              className={`block transition-transform duration-300 ${isOpen ? "rotate-90" : "rotate-0"}`}
+            >
+              {isOpen ? <X size={24} /> : <Menu size={24} />}
+            </span>
+          </button>
         </div>
       </div>
 
@@ -232,7 +239,7 @@ export default function Navbar() {
             {links.map((l, i) => (
               <Link
                 key={l.id}
-                href={`#${l.id}`}
+                href={`/#${l.id}`}
                 onClick={closeMenu}
                 tabIndex={isOpen ? 0 : -1}
                 style={{ transitionDelay: isOpen ? `${i * 55}ms` : "0ms" }}

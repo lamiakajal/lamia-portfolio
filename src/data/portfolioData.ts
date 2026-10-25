@@ -1,9 +1,48 @@
+// ==========================================
+// PROJECTS DATA  (single place to manage all projects)
+//
+// HOW TO ADD A NEW PROJECT
+//   1. Copy the TEMPLATE block below, paste it at the TOP of `projectsData`
+//      and fill in the fields.
+//   2. Put its screenshot in /public/projects/ and set  image: "/projects/my-project.png"
+//      (a tall full-page screenshot is fine: it is shown inside a browser mock-up that
+//      scrolls automatically). Leave  image: ""  to show generated cover art.
+//   3. Set  featured: true  to show it on the home page.
+//
+// HOW TO REPLACE A FEATURED PROJECT WITH A BETTER ONE
+//   Set  featured: false  on the old project and  featured: true  on the new one.
+//   The old project is NOT deleted: it moves to the "View All Projects" page (/projects).
+//   Home page shows the featured projects in the order they appear in this list.
+//
+// TEMPLATE (copy this):
+// {
+//   id: "6",                           // any unique text
+//   slug: "my-project",                // used in the URL: /projects/my-project (lowercase, no spaces)
+//   title: "My Project",
+//   image: "/projects/my-project.png", // or "" for generated cover art
+//   category: "Web Apps",              // groups the filter buttons (e.g. "Landing Pages")
+//   featured: true,
+//   techStack: ["Next.js", "TypeScript"],
+//   shortDescription: "One or two sentences shown on the card.",
+//   fullDescription: "A longer description shown on the project page.",
+//   liveLink: "https://...",
+//   githubLink: "https://github.com/lamiakajal/...",
+//   challenges: ["Problem 1 you solved.", "Problem 2 you solved."],
+//   futurePlans: ["Improvement 1.", "Improvement 2."],
+// },
+//
+// NOTE: "challenges" and "futurePlans" below are DRAFTS written from each README's
+// feature list. Please edit them so they describe what really happened.
+// ==========================================
 export interface Project {
   id: string;
   slug: string;
   title: string;
+  /** Screenshot path inside /public (e.g. "/projects/axit.png"), or "" for generated cover art */
   image: string;
   category: string;
+  /** true = shown on the home page, false = only on the /projects page */
+  featured: boolean;
   techStack: string[];
   shortDescription: string;
   fullDescription: string;
@@ -14,77 +53,144 @@ export interface Project {
 }
 
 export const projectsData: Project[] = [
+  // ---------------------------------------------------------------- FEATURED
   {
     id: "1",
-    slug: "axit-modern-app",
-    title: "AXIT Modern Enterprise App",
-    image:
-      "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80",
-    category: "Web Apps",
-    techStack: ["Next.js", "Tailwind CSS", "TypeScript", "Framer Motion"],
+    slug: "bazar-dor",
+    title: "BazarDor (বাজার দর)",
+    image: "",
+    category: "Full-Stack Apps",
+    featured: true,
+    techStack: [
+      "Next.js",
+      "TypeScript",
+      "Tailwind CSS",
+      "BetterAuth",
+      "MongoDB Atlas",
+    ],
     shortDescription:
-      "High-performance landing page featuring sticky headers, responsive grid systems, and smooth animations.",
+      "A localized commodity price tracker that brings daily grocery rates from Dhaka's key markets into one clear, Bengali-first interface.",
     fullDescription:
-      "AXIT is a cutting-edge corporate enterprise web application engineered with Next.js App Router and Tailwind CSS. It focuses on lightning-fast load times, flawless responsive layouts, and interactive UI components.",
-    liveLink: "https://vercel.com",
-    githubLink: "https://github.com",
+      "BazarDor makes daily grocery shopping easier by showing transparent market prices. It collects commodity rates from wholesale and retail markets such as Karwan Bazar, Sadar Bazar and Mirpur Green Market, and presents prices, price changes and trends using Bengali numerals and a Bengali calendar date. Visitors can browse categories like rice, lentils, oil, vegetables, fish and meat, sort by price, and see today's biggest risers and fallers in a live ticker. Product detail pages with a cross-market price breakdown are protected, so signing in (email/password, Google or GitHub through BetterAuth) is required, and users can update their profile.",
+    liveLink: "https://bazar-dor-lamiakajal.vercel.app",
+    githubLink: "https://github.com/lamiakajal/bazar-dor",
     challenges: [
-      "Optimizing client-side bundle size while integrating complex scroll-spy observers.",
-      "Maintaining 60fps smooth animations across mobile and tablet viewports.",
-      "Configuring strict TypeScript interfaces for component props and layout structures.",
+      "Showing prices, units and dates in Bengali numerals everywhere in the interface.",
+      "Sorting prices by their parsed numeric value instead of raw text, so the order is always correct.",
+      "Protecting product pages with middleware and redirecting guests to the sign-in page.",
+      "Combining email/password and Google/GitHub sign-in with BetterAuth and MongoDB.",
     ],
     futurePlans: [
-      "Implement automated unit and integration testing with Jest and React Testing Library.",
-      "Migrate global state management to Zustand for enhanced scalability.",
+      "Add price history charts for each commodity.",
+      "Send price-drop alerts for favourite items.",
+      "Cover more markets and cities beyond Dhaka.",
     ],
   },
   {
     id: "2",
-    slug: "devstack-developer-hub",
-    title: "DevStack Developer Hub",
-    image:
-      "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80",
+    slug: "fit-log",
+    title: "FitLog: Workout Library & Daily Lift Tracker",
+    image: "",
     category: "Web Apps",
-    techStack: ["React", "JavaScript", "Netlify CI/CD", "Tailwind CSS"],
+    featured: true,
+    techStack: [
+      "Next.js",
+      "TypeScript",
+      "Tailwind CSS",
+      "React Context API",
+      "LocalStorage",
+    ],
     shortDescription:
-      "Modular component hub built with React, robust navigation controls, and Netlify CI/CD deployment.",
+      "A dark-neon fitness app to discover workouts, plan a daily lifting split and track completion without any friction.",
     fullDescription:
-      "DevStack Hub is a centralized developer platform designed to showcase reusable UI components, technical snippets, and automated deployment pipelines.",
-    liveLink: "https://netlify.com",
-    githubLink: "https://github.com",
+      "FitLog is a fitness tracking and workout management app with a bold dark neon look. Users browse a library of strength and hypertrophy exercises, filter by muscle group (chest, back, legs, shoulders, arms, core), and search instantly. They build a daily plan with a smart limit of five workouts per day to avoid overtraining, bookmark exercises for later, and see live totals for selected exercises, estimated duration and projected calories. A mark-as-completed checklist shows progress, and everything is saved in the browser with React Context and localStorage so plans survive refreshes.",
+    liveLink: "https://fit-log-lamiakajal.vercel.app",
+    githubLink: "https://github.com/lamiakajal/fit-log",
     challenges: [
-      "Managing complex state across deeply nested component hierarchies.",
-      "Configuring strict CORS policies and Netlify SPA redirect rules for smooth client routing.",
+      "Enforcing the five-workout daily limit with clear, friendly feedback.",
+      "Keeping the plan and bookmarks in sync across refreshes using Context and localStorage.",
+      "Calculating live totals for duration and calories as the plan changes.",
+      "Building smooth scroll-entrance and glow animations with IntersectionObserver.",
     ],
     futurePlans: [
-      "Incorporate live GitHub REST API integration to fetch real-time repository statistics.",
-      "Add interactive code snippet playgrounds.",
+      "Add user accounts and a database so plans sync across devices.",
+      "Add progress charts and personal records over time.",
+      "Let users create their own custom workouts.",
     ],
   },
   {
     id: "3",
-    slug: "lucid-product-showcase",
-    title: "Lucid Product Showcase",
-    image:
-      "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=800&q=80",
+    slug: "axit-landing-page",
+    title: "AXIT: Modern Responsive SaaS Landing Page",
+    image: "",
     category: "Landing Pages",
-    techStack: ["Next.js App Router", "Tailwind CSS", "TypeScript"],
+    featured: true,
+    techStack: ["Next.js", "React", "Tailwind CSS v4", "React Icons", "Vercel"],
     shortDescription:
-      "Next.js product landing page optimized for high conversion rates and lightning-fast bundle performance.",
+      "A production-ready SaaS landing page with scroll animations in both directions and smooth micro-interactions, built without animation libraries.",
     fullDescription:
-      "Lucid Showcase is an elite product marketing landing page engineered for high user engagement, pristine typography, and maximum SEO performance.",
-    liveLink: "https://vercel.com",
-    githubLink: "https://github.com",
+      "AXIT is a modern SaaS landing page built with the Next.js App Router and Tailwind CSS v4. Every entrance animation is powered by the native IntersectionObserver, so sections animate in on scroll and reset when they leave the screen, ready to play again. It uses hardware-accelerated CSS for shimmer sweeps, floating buttons and hover effects, with no third-party animation library. The page includes a sticky navbar with a mobile drawer, hero with a lead form, tabs, feature grids, pricing tiers, testimonials, a contact form, footer and a floating scroll-to-top button, and it is fully responsive from phones to ultra-wide screens.",
+    liveLink: "https://axit-lamiakajal.vercel.app/",
+    githubLink: "https://github.com/lamiakajal/axit-landing-page",
     challenges: [
-      "Achieving 100 Lighthouse performance scores by optimizing image assets and lazy-loading heavy components.",
-      "Ensuring strict keyboard accessibility and ARIA compliance.",
+      "Making animations replay on scroll in both directions using only native browser APIs.",
+      "Keeping the layout pixel-perfect on mobile, tablet, laptop and ultra-wide screens.",
+      "Keeping animations smooth without adding any animation library.",
     ],
     futurePlans: [
-      "Add multi-language internationalization (i18n) support.",
-      "Integrate interactive customer feedback testimonials and dynamic pricing calculators.",
+      "Connect the contact and lead forms to a real backend.",
+      "Add dark/light theme switching.",
+      "Add multi-language support.",
     ],
   },
+  // ------------------------------------------------------ MORE (View All Projects)
+  {
+    id: "4",
+    slug: "lucid-landing-page",
+    title: "Lucid: High-Performance SaaS Landing Page",
+    image: "",
+    category: "Landing Pages",
+    featured: false,
+    techStack: ["Next.js", "React", "Tailwind CSS", "React Icons", "Vercel"],
+    shortDescription:
+      "A conversion-focused SaaS landing page with a dark blue identity, GPU-accelerated floating components and touch-friendly hover effects.",
+    fullDescription:
+      "Lucid is a responsive SaaS landing page crafted with the Next.js App Router and Tailwind CSS. It pairs a dark base with electric-blue accents and uses GPU-accelerated animations. Its signature feature is a floating dark contact card above an embedded satellite map that pauses while the visitor types. Buttons, navigation and pricing cards share a center-outward expand effect that works for both mouse hover and mobile touch. The page is split into reusable sections (Navbar, Hero, Features, DeviceShowcase, Customization, Testimonials, CallToAction, Pricing, Contact and Footer).",
+    liveLink: "https://lucid-lamiakajal.vercel.app",
+    githubLink: "https://github.com/lamiakajal/lucid-landing-page",
+    challenges: [
+      "Animating a floating contact form smoothly with GPU transforms while pausing it during input.",
+      "Making the same expand effect work for both mouse hover and mobile touch.",
+    ],
+    futurePlans: [
+      "Connect the contact form to an email or database service.",
+      "Add more pricing and feature variations.",
+    ],
+  },
+  {
+    id: "5",
+    slug: "devstack",
+    title: "DevStack: Build Your Ideal Dev Stack",
+    image: "",
+    category: "Web Apps",
+    featured: false,
+    // TODO: add the other technologies used in DevStack
+    techStack: ["TypeScript"],
+    shortDescription:
+      "An interactive web app to explore, compare and build the ideal development stack for modern software projects.",
+    fullDescription:
+      "DevStack is an interactive web app that helps developers explore, compare and build the ideal technology stack for modern software projects. TODO: add more details about its features.",
+    liveLink: "https://dev-stack-peach-chi.vercel.app",
+    githubLink: "https://github.com/lamiakajal/DevStack",
+    challenges: [
+      "Presenting many technologies side by side in a clear, easy-to-scan interface.",
+    ],
+    futurePlans: ["Add more technologies and ready-made stack templates."],
+  },
 ];
+
+/** Projects shown on the home page */
+export const featuredProjects = projectsData.filter((p) => p.featured);
 
 // ==========================================
 // Shared site data (single source of truth)
@@ -132,7 +238,11 @@ export const socialLinks: SocialLink[] = [
   },
   { key: "medium", label: "Medium", href: "https://medium.com/@lamiakajal" },
   { key: "blog", label: "Blog", href: "https://lamiakajal.blogspot.com" },
-  { key: "whatsapp", label: "WhatsApp", href: "https://whatsapp.com/lamiakajal" },
+  {
+    key: "whatsapp",
+    label: "WhatsApp",
+    href: "https://whatsapp.com/lamiakajal",
+  },
 ];
 
 /** Quick lookup helper: getSocial("github") -> "https://github.com/lamiakajal" */
