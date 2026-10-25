@@ -490,11 +490,7 @@
   width: min(560px, 130vw);
   height: min(560px, 130vw);
   border-radius: 9999px;
-  background: radial-gradient(
-    circle,
-    var(--spotlight) 0%,
-    transparent 62%
-  );
+  background: radial-gradient(circle, var(--spotlight) 0%, transparent 62%);
   opacity: 0;
   transition: opacity 0.5s ease;
   will-change: transform, opacity;
@@ -518,7 +514,11 @@
   height: 90px;
   border-radius: 9999px;
   border: 2px solid rgba(244, 114, 182, 0.8);
-  background: radial-gradient(circle, rgba(236, 72, 153, 0.25), transparent 70%);
+  background: radial-gradient(
+    circle,
+    rgba(236, 72, 153, 0.25),
+    transparent 70%
+  );
   pointer-events: none;
   animation: tapRipple 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
@@ -663,5 +663,30 @@ html[data-preloading="true"] .nav-drop {
   }
   .cursor-spotlight {
     transition: none;
+  }
+}
+
+/* Skills cards: staggered pop-in (replays when the tab changes) */
+@keyframes skillPop {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.92);
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+.skill-pop {
+  opacity: 0;
+  animation: skillPop 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: calc(var(--i, 0) * 60ms);
+}
+@media (prefers-reduced-motion: reduce) {
+  .skill-pop {
+    opacity: 1;
+    animation: none;
   }
 }

@@ -7,6 +7,7 @@
 import React from "react";
 import Hero from "@/components/sections/Hero";
 import About from "@/components/sections/About";
+import Skills from "@/components/sections/Skills";
 
 export default function Home() {
   return (
@@ -15,7 +16,12 @@ export default function Home() {
       <Hero />
       <About />
 
-      {/* Future sections (About, Projects, Skills, Contact) will be added here */}
+      {/* Skills Section */}
+      <Skills />
+
+      {/* Education Section */}
+
+      {/* Future sections (Projects, Contact) will be added here */}
     </div>
   );
 }
