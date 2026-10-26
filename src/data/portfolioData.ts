@@ -290,3 +290,21 @@ export const techStack: string[] = [
   "Git & GitHub",
   "AI-Assisted Coding",
 ];
+
+// ==========================================
+// SITE PHOTOS - to change a picture: put the new file in /public/assets/
+// and change the `src` below. `position` decides which part is kept when the
+// photo is cropped ("50% 30%" = centre horizontally, 30% from the top).
+// ==========================================
+export const siteImages = {
+  hero: {
+    src: "/assets/lamiakajal-hero.webp",
+    alt: "Lamia Kajal",
+    position: "50% 30%",
+  },
+  about: {
+    src: "/assets/lamiakajal-about.webp",
+    alt: "Lamia Kajal - Full Stack Developer",
+    position: "50% 38%",
+  },
+};

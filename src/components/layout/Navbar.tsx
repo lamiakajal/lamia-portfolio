@@ -140,7 +140,7 @@ export default function Navbar() {
         {/* Logo / Brand */}
         <Link
           href="/#home"
-          className={`text-xl font-bold tracking-tight flex items-center gap-3 group ${outfit.className}`}
+          className={`text-xl font-bold tracking-tight flex items-center gap-3 group whitespace-nowrap shrink-0 ${outfit.className}`}
         >
           <div className="relative w-10 h-10 flex items-center justify-center transition-transform duration-500 group-hover:rotate-6 group-hover:scale-105">
             <div
@@ -161,7 +161,7 @@ export default function Navbar() {
         {/* Desktop Navigation Links with active underline */}
         <nav
           aria-label="Primary"
-          className="hidden md:flex items-center space-x-8 text-sm font-medium"
+          className="hidden lg:flex items-center space-x-5 xl:space-x-8 text-sm font-medium"
         >
           {links.map((l) => {
             const isActive = active === l.id;
@@ -213,7 +213,7 @@ export default function Navbar() {
           {/* Mobile Menu Toggle */}
           <button
             onClick={toggleMenu}
-            className="md:hidden text-slate-300 hover:text-pink-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-pink-400 rounded p-1 transition-transform duration-300 active:scale-90"
+            className="lg:hidden text-slate-300 hover:text-pink-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-pink-400 rounded p-1 transition-transform duration-300 active:scale-90"
             aria-label="Toggle Menu"
             aria-expanded={isOpen}
             aria-controls="mobile-menu"
@@ -230,7 +230,7 @@ export default function Navbar() {
       {/* Mobile Drawer: smooth height + staggered links */}
       <div
         id="mobile-menu"
-        className={`md:hidden grid transition-[grid-template-rows] duration-500 ease-out ${
+        className={`lg:hidden grid transition-[grid-template-rows] duration-500 ease-out ${
           isOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
         }`}
       >
