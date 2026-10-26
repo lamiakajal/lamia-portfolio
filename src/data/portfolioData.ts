@@ -301,10 +301,11 @@ export const siteImages = {
     src: "/assets/lamiakajal-hero.webp",
     alt: "Lamia Kajal",
     position: "50% 30%",
+    zoom: 1.35,
   },
   about: {
     src: "/assets/lamiakajal-about.webp",
     alt: "Lamia Kajal - Full Stack Developer",
-    position: "50% 38%",
+    position: "50% 68%",
   },
 };
