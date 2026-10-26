@@ -12,6 +12,16 @@ import Image from "next/image";
 import { Download, ChevronDown } from "lucide-react";
 import { Outfit } from "next/font/google";
 import { getSocial, siteImages } from "@/data/portfolioData";
+import {
+  SiNextdotjs,
+  SiTailwindcss,
+  SiReact,
+  SiMongodb,
+  SiTypescript,
+  SiNodedotjs,
+  SiJavascript,
+  SiHtml5,
+} from "react-icons/si";
 import { useTypewriter } from "@/hooks/useTypewriter";
 
 const outfit = Outfit({
@@ -21,98 +31,36 @@ const outfit = Outfit({
 });
 
 /* ------------------------------------------------------------------
-   Skill icons (inline SVG, no extra package needed)
+   Orbiting skill icons (original brand logos + colours)
+   To add or remove an icon, just edit this list: the icons are spread
+   evenly around the circle automatically.
 ------------------------------------------------------------------ */
-const NodeIcon = () => (
-  <svg
-    viewBox="0 0 24 24"
-    className="w-6 h-6"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="1.6"
-    strokeLinejoin="round"
-  >
-    <polygon points="12,2 21,7 21,17 12,22 3,17 3,7" />
-    <text
-      x="12"
-      y="15.2"
-      textAnchor="middle"
-      fontSize="7.5"
-      fontWeight="800"
-      fill="currentColor"
-      stroke="none"
-    >
-      JS
-    </text>
-  </svg>
-);
+// Black logos use the theme text colour so they stay visible in dark and light mode
+const ADAPTIVE = "var(--fg-strong)";
 
-const Html5Icon = () => (
-  <svg viewBox="0 0 24 24" className="w-6 h-6" fill="currentColor">
-    <path d="M3.5 2h17l-1.55 17.4L12 22l-6.95-2.6L3.5 2z" />
-    <text
-      x="12"
-      y="15"
-      textAnchor="middle"
-      fontSize="9"
-      fontWeight="900"
-      fill="#05010a"
-    >
-      5
-    </text>
-  </svg>
-);
-
-const ReactIcon = () => (
-  <svg
-    viewBox="-12 -12 24 24"
-    className="w-7 h-7"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="1.1"
-  >
-    <circle r="1.8" fill="currentColor" stroke="none" />
-    <ellipse rx="10" ry="4" />
-    <ellipse rx="10" ry="4" transform="rotate(60)" />
-    <ellipse rx="10" ry="4" transform="rotate(120)" />
-  </svg>
-);
-
-/* ------------------------------------------------------------------
-   Orbit config — To add a new skill, simply add an object here
------------------------------------------------------------------- */
-const skills = [
-  {
-    name: "Node.js",
-    icon: <NodeIcon />,
-    startAngle: 225,
-    duration: 20,
-    reverse: false,
-    color:
-      "text-emerald-400 border-emerald-400 shadow-[0_0_22px_rgba(16,185,129,0.7)]",
-    shape: "rounded-full",
-  },
-  {
-    name: "HTML5",
-    icon: <Html5Icon />,
-    startAngle: 340,
-    duration: 20,
-    reverse: false,
-    color:
-      "text-amber-400 border-amber-500 shadow-[0_0_22px_rgba(245,158,11,0.7)]",
-    shape: "rounded-full",
-  },
-  {
-    name: "React",
-    icon: <ReactIcon />,
-    startAngle: 110,
-    duration: 20,
-    reverse: false,
-    color:
-      "text-cyan-400 border-cyan-400 shadow-[0_0_22px_rgba(6,182,212,0.7)]",
-    shape: "rounded-full",
-  },
+const orbitSkills: {
+  name: string;
+  icon: React.ComponentType<{ size?: number | string }>;
+  color: string;
+}[] = [
+  { name: "Next.js", icon: SiNextdotjs, color: ADAPTIVE },
+  { name: "Tailwind CSS", icon: SiTailwindcss, color: "#06B6D4" },
+  { name: "React", icon: SiReact, color: "#61DAFB" },
+  { name: "MongoDB", icon: SiMongodb, color: "#47A248" },
+  { name: "TypeScript", icon: SiTypescript, color: "#3178C6" },
+  { name: "Node.js", icon: SiNodedotjs, color: "#5FA04E" },
+  { name: "JavaScript", icon: SiJavascript, color: "#F7DF1E" },
+  { name: "HTML5", icon: SiHtml5, color: "#E34F26" },
 ];
+
+const ORBIT_SECONDS = 28; // time for one full turn
+
+const skills = orbitSkills.map((skill, i) => ({
+  ...skill,
+  startAngle: (i * 360) / orbitSkills.length,
+  duration: ORBIT_SECONDS,
+  reverse: false,
+}));
 
 /* Roles for the typewriter line */
 const roles = [
@@ -410,39 +358,53 @@ export default function Hero() {
                   <Image
                     src={siteImages.hero.src}
                     alt={siteImages.hero.alt}
+                    unoptimized
                     fill
                     sizes="(max-width: 640px) 224px, (max-width: 1024px) 272px, 304px"
                     priority
                     className="object-cover"
-                    style={{ objectPosition: siteImages.hero.position }}
+                    style={{
+                      objectPosition: siteImages.hero.position,
+                      // Zoom in around the face so the person looks bigger and closer
+                      transform: `scale(${siteImages.hero.zoom})`,
+                      transformOrigin: siteImages.hero.position,
+                    }}
                   />
                 </div>
 
                 {/* Orbiting Skill Icons */}
-                {skills.map((skill) => (
-                  <div
-                    key={skill.name}
-                    className="absolute inset-0 flex items-center justify-center pointer-events-none z-20"
-                  >
+                {skills.map((skill) => {
+                  const Icon = skill.icon;
+                  return (
                     <div
-                      className={`orbit-item ${skill.reverse ? "reverse" : ""}`}
-                      style={
-                        {
-                          animationDuration: `${skill.duration}s`,
-                          animationDelay: `-${(skill.startAngle / 360) * skill.duration}s`,
-                          "--start": `${skill.startAngle}deg`,
-                        } as React.CSSProperties
-                      }
+                      key={skill.name}
+                      className="absolute inset-0 flex items-center justify-center pointer-events-none z-20"
                     >
                       <div
-                        title={skill.name}
-                        className={`w-10 h-10 sm:w-11 sm:h-11 lg:w-12 lg:h-12 ${skill.shape} bg-chip border-2 flex items-center justify-center backdrop-blur-md ${skill.color}`}
+                        className={`orbit-item ${skill.reverse ? "reverse" : ""}`}
+                        style={
+                          {
+                            animationDuration: `${skill.duration}s`,
+                            animationDelay: `-${(skill.startAngle / 360) * skill.duration}s`,
+                            "--start": `${skill.startAngle}deg`,
+                          } as React.CSSProperties
+                        }
                       >
-                        {skill.icon}
+                        <div
+                          title={skill.name}
+                          className="w-10 h-10 sm:w-11 sm:h-11 lg:w-12 lg:h-12 rounded-full bg-chip border-2 flex items-center justify-center backdrop-blur-md"
+                          style={{
+                            color: skill.color,
+                            borderColor: `color-mix(in srgb, ${skill.color} 70%, transparent)`,
+                            boxShadow: `0 0 20px color-mix(in srgb, ${skill.color} 55%, transparent)`,
+                          }}
+                        >
+                          <Icon size={22} />
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           </div>
