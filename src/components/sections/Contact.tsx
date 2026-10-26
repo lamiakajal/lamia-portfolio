@@ -470,7 +470,7 @@ export default function Contact() {
                       aria-hidden
                       value={form.website}
                       onChange={update("website")}
-                      className="absolute left-[-9999px] w-px h-px opacity-0"
+                      className="sr-only"
                     />
 
                     {status === "error" && (

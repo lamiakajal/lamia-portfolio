@@ -34,7 +34,7 @@ import {
 import Reveal from "@/components/ui/Reveal";
 import AnimatedCounter from "@/components/ui/AnimatedCounter";
 import Typewriter from "@/components/ui/Typewriter";
-import { getSocial, techStack } from "@/data/portfolioData";
+import { getSocial, techStack, siteImages } from "@/data/portfolioData";
 
 const outfit = Outfit({
   subsets: ["latin"],
@@ -289,9 +289,9 @@ export default function About() {
             </div>
           </Reveal>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-stretch">
             {/* Left: text, traits, stats, buttons */}
-            <div className="lg:col-span-7 space-y-8 min-w-0 order-2 lg:order-1">
+            <div className="lg:col-span-7 min-w-0 order-2 lg:order-1">
               <div className="space-y-5 text-slate-300 text-sm sm:text-base leading-relaxed">
                 <Reveal direction="left" delay={0}>
                   <p>
@@ -332,78 +332,13 @@ export default function About() {
                   </blockquote>
                 </Reveal>
               </div>
-
-              {/* Personality chips */}
-              <Reveal direction="up" delay={100}>
-                <div className="flex flex-wrap gap-2.5 justify-center lg:justify-start">
-                  {traits.map((t) => (
-                    <span
-                      key={t}
-                      className="px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-medium bg-card border border-line text-slate-300 hover:text-pink-400 hover:border-pink-500/50 hover:-translate-y-0.5 transition-all duration-300 cursor-default"
-                    >
-                      {t}
-                    </span>
-                  ))}
-                </div>
-              </Reveal>
-
-              {/* Animated counters */}
-              <div className="grid grid-cols-3 gap-3 sm:gap-4">
-                {stats.map((s, i) => (
-                  <Reveal key={s.label} direction="zoom" delay={i * 120}>
-                    <div
-                      className="glow-card loop-bob h-full p-4 sm:p-5 rounded-2xl bg-card border border-line text-center sm:text-left group"
-                      style={
-                        { "--bob-delay": `${i * 0.5}s` } as React.CSSProperties
-                      }
-                    >
-                      <h4
-                        className={`text-2xl sm:text-3xl font-extrabold text-strong mb-1 transition-colors group-hover:text-pink-400 ${outfit.className}`}
-                      >
-                        <AnimatedCounter to={s.value} suffix={s.suffix} />
-                      </h4>
-                      <p className="text-[11px] sm:text-sm text-pink-300/80 font-medium leading-snug">
-                        {s.label}
-                      </p>
-                    </div>
-                  </Reveal>
-                ))}
-              </div>
-
-              {/* Call to action buttons */}
-              <Reveal direction="up" delay={150}>
-                <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4">
-                  <a
-                    href="#contact"
-                    className="btn-shine group relative overflow-hidden inline-flex items-center gap-2.5 px-6 py-3.5 rounded-full bg-linear-to-r from-pink-600 via-fuchsia-500 to-pink-500 text-white font-semibold text-sm shadow-[0_0_25px_rgba(236,72,153,0.5)] hover:shadow-[0_0_35px_rgba(236,72,153,0.8)] hover:scale-105 active:scale-95 transition-all duration-300"
-                  >
-                    <span className="relative z-10">
-                      Let&apos;s Work Together
-                    </span>
-                    <ArrowRight
-                      size={16}
-                      className="relative z-10 transition-transform duration-300 group-hover:translate-x-1"
-                    />
-                  </a>
-                  <a
-                    href="#projects"
-                    className="group inline-flex items-center gap-2 px-6 py-3.5 rounded-full border border-pink-500/50 bg-pink-500/10 text-strong font-semibold text-sm hover:bg-pink-500/20 hover:scale-105 active:scale-95 transition-all duration-300"
-                  >
-                    View My Projects
-                    <ArrowUpRight
-                      size={16}
-                      className="text-pink-400 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-                    />
-                  </a>
-                </div>
-              </Reveal>
             </div>
 
             {/* Right: 3D tilt photo card with floating badges */}
             <div className="lg:col-span-5 order-1 lg:order-2 min-w-0">
-              <Reveal direction="right" delay={100}>
-                <div className="w-full flex justify-center lg:justify-end">
-                  <div className="relative w-full max-w-xs sm:max-w-sm aspect-4/5">
+              <Reveal direction="right" delay={100} className="h-full">
+                <div className="w-full h-full flex justify-center lg:justify-end">
+                  <div className="relative w-full max-w-xs sm:max-w-sm aspect-4/5 lg:aspect-auto lg:max-w-none lg:h-full lg:min-h-112">
                     {/* Decorative layers */}
                     <div className="absolute inset-0 bg-linear-to-tr from-pink-500/25 to-fuchsia-500/25 rounded-3xl rotate-6 scale-105 blur-xl opacity-70" />
                     <div className="absolute inset-0 border-2 border-pink-500/30 rounded-3xl -rotate-3 transition-transform duration-700 hover:rotate-0" />
@@ -418,11 +353,12 @@ export default function About() {
                       className="touch-pan-y tilt-card relative w-full h-full rounded-3xl overflow-hidden border border-line shadow-2xl shadow-pink-500/20 transition-transform duration-200 ease-out will-change-transform"
                     >
                       <Image
-                        src="/assets/lamiakajal-about.png"
-                        alt="Lamia Kajal - Full Stack Developer"
+                        src={siteImages.about.src}
+                        alt={siteImages.about.alt}
                         fill
                         sizes="(max-width: 640px) 80vw, (max-width: 1024px) 384px, 33vw"
                         className="object-cover"
+                        style={{ objectPosition: siteImages.about.position }}
                       />
                       <div className="absolute inset-0 bg-linear-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
                       <div className="tilt-glare absolute inset-0 pointer-events-none" />
@@ -457,6 +393,73 @@ export default function About() {
                 </div>
               </Reveal>
             </div>
+          </div>
+          {/* Personality chips, counters and buttons: full-width row under the bio + photo */}
+          <div className="mt-12 sm:mt-14 space-y-8">
+            {/* Personality chips */}
+            <Reveal direction="up" delay={100}>
+              <div className="flex flex-wrap gap-2.5 justify-center">
+                {traits.map((t) => (
+                  <span
+                    key={t}
+                    className="px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-medium bg-card border border-line text-slate-300 hover:text-pink-400 hover:border-pink-500/50 hover:-translate-y-0.5 transition-all duration-300 cursor-default"
+                  >
+                    {t}
+                  </span>
+                ))}
+              </div>
+            </Reveal>
+
+            {/* Animated counters */}
+            <div className="grid grid-cols-3 gap-3 sm:gap-4 max-w-3xl mx-auto">
+              {stats.map((s, i) => (
+                <Reveal key={s.label} direction="zoom" delay={i * 120}>
+                  <div
+                    className="glow-card loop-bob h-full p-4 sm:p-5 rounded-2xl bg-card border border-line text-center sm:text-left group"
+                    style={
+                      { "--bob-delay": `${i * 0.5}s` } as React.CSSProperties
+                    }
+                  >
+                    <h4
+                      className={`text-2xl sm:text-3xl font-extrabold text-strong mb-1 transition-colors group-hover:text-pink-400 ${outfit.className}`}
+                    >
+                      <AnimatedCounter to={s.value} suffix={s.suffix} />
+                    </h4>
+                    <p className="text-[11px] sm:text-sm text-pink-300/80 font-medium leading-snug">
+                      {s.label}
+                    </p>
+                  </div>
+                </Reveal>
+              ))}
+            </div>
+
+            {/* Call to action buttons */}
+            <Reveal direction="up" delay={150}>
+              <div className="flex flex-wrap items-center justify-center gap-4">
+                <a
+                  href="#contact"
+                  className="btn-shine group relative overflow-hidden inline-flex items-center gap-2.5 px-6 py-3.5 rounded-full bg-linear-to-r from-pink-600 via-fuchsia-500 to-pink-500 text-white font-semibold text-sm shadow-[0_0_25px_rgba(236,72,153,0.5)] hover:shadow-[0_0_35px_rgba(236,72,153,0.8)] hover:scale-105 active:scale-95 transition-all duration-300"
+                >
+                  <span className="relative z-10">
+                    Let&apos;s Work Together
+                  </span>
+                  <ArrowRight
+                    size={16}
+                    className="relative z-10 transition-transform duration-300 group-hover:translate-x-1"
+                  />
+                </a>
+                <a
+                  href="#projects"
+                  className="group inline-flex items-center gap-2 px-6 py-3.5 rounded-full border border-pink-500/50 bg-pink-500/10 text-strong font-semibold text-sm hover:bg-pink-500/20 hover:scale-105 active:scale-95 transition-all duration-300"
+                >
+                  View My Projects
+                  <ArrowUpRight
+                    size={16}
+                    className="text-pink-400 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                  />
+                </a>
+              </div>
+            </Reveal>
           </div>
         </div>
 

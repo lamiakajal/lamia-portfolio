@@ -11,7 +11,7 @@ import React, { useRef } from "react";
 import Image from "next/image";
 import { Download, ChevronDown } from "lucide-react";
 import { Outfit } from "next/font/google";
-import { getSocial } from "@/data/portfolioData";
+import { getSocial, siteImages } from "@/data/portfolioData";
 import { useTypewriter } from "@/hooks/useTypewriter";
 
 const outfit = Outfit({
@@ -408,12 +408,13 @@ export default function Hero() {
                 {/* Profile Image */}
                 <div className="relative z-10 w-56 sm:w-68 lg:w-76 h-56 sm:h-68 lg:h-76 rounded-full overflow-hidden border-4 border-pink-500/50 shadow-2xl shadow-pink-500/30 bg-slate-900">
                   <Image
-                    src="/assets/lamiakajal-hero.png"
-                    alt="Lamia Kajal"
+                    src={siteImages.hero.src}
+                    alt={siteImages.hero.alt}
                     fill
                     sizes="(max-width: 640px) 224px, (max-width: 1024px) 272px, 304px"
                     priority
                     className="object-cover"
+                    style={{ objectPosition: siteImages.hero.position }}
                   />
                 </div>
 
