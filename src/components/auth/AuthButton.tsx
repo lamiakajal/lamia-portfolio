@@ -1,0 +1,116 @@
+// ==========================================
+// Component: AuthButton (Navbar)
+// Shows "Login" when signed out, or an avatar menu when signed in
+// (Write a post / Manage posts for the admin, and Sign out).
+// ==========================================
+
+"use client";
+
+import React, { useEffect, useRef, useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { LogIn, LogOut, PenSquare, LayoutList } from "lucide-react";
+import { authClient } from "@/lib/auth-client";
+
+export default function AuthButton() {
+  const router = useRouter();
+  const { data: session, isPending } = authClient.useSession();
+  const [open, setOpen] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const boxRef = useRef<HTMLDivElement>(null);
+  const userId = session?.user?.id;
+
+  // Ask the server whether this user is the admin
+  useEffect(() => {
+    if (!userId) return;
+    let cancelled = false;
+    fetch("/api/me")
+      .then((r) => r.json())
+      .then((d: { isAdmin?: boolean }) => {
+        if (!cancelled) setIsAdmin(Boolean(d.isAdmin));
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, [userId]);
+
+  // Close the menu when clicking outside or pressing Escape
+  useEffect(() => {
+    if (!open) return;
+    const onClick = (e: MouseEvent) => {
+      if (boxRef.current && !boxRef.current.contains(e.target as Node)) setOpen(false);
+    };
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    document.addEventListener("mousedown", onClick);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onClick);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
+
+  if (isPending) {
+    return <span className="w-10 h-10 rounded-full bg-card border border-line animate-pulse" aria-hidden />;
+  }
+
+  if (!session) {
+    return (
+      <Link
+        href="/login"
+        aria-label="Login"
+        className="h-10 px-3 sm:px-4 rounded-full border border-line bg-card flex items-center gap-2 text-sm font-semibold text-slate-200 hover:text-pink-400 hover:border-pink-500/50 active:scale-95 transition-all"
+      >
+        <LogIn size={16} />
+        <span className="hidden sm:inline">Login</span>
+      </Link>
+    );
+  }
+
+  const initial = (session.user.name || session.user.email || "?").charAt(0).toUpperCase();
+  const signOut = async () => {
+    await authClient.signOut();
+    setOpen(false);
+    setIsAdmin(false);
+    router.refresh();
+  };
+
+  const item =
+    "flex w-full items-center gap-2.5 px-4 py-2.5 text-sm text-slate-200 hover:bg-pink-500/10 hover:text-pink-400 transition-colors";
+
+  return (
+    <div ref={boxRef} className="relative">
+      <button
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        aria-label="Account menu"
+        aria-expanded={open}
+        className="w-10 h-10 rounded-full bg-linear-to-br from-pink-500 to-fuchsia-500 text-white text-sm font-bold flex items-center justify-center shadow-[0_0_18px_rgba(236,72,153,0.4)] hover:scale-110 active:scale-90 transition-all"
+      >
+        {initial}
+      </button>
+
+      {open && (
+        <div className="animate-fadeIn absolute right-0 mt-3 w-60 rounded-2xl bg-drawer border border-pink-500/30 shadow-2xl shadow-pink-500/20 overflow-hidden backdrop-blur-xl z-50">
+          <div className="px-4 py-3 border-b border-line">
+            <p className="text-sm font-bold text-strong truncate">{session.user.name}</p>
+            <p className="text-xs text-slate-400 truncate">{session.user.email}</p>
+          </div>
+          {isAdmin && (
+            <>
+              <Link href="/admin/blog/new" onClick={() => setOpen(false)} className={item}>
+                <PenSquare size={16} /> Write a post
+              </Link>
+              <Link href="/admin/blog" onClick={() => setOpen(false)} className={item}>
+                <LayoutList size={16} /> Manage posts
+              </Link>
+            </>
+          )}
+          <button type="button" onClick={signOut} className={item}>
+            <LogOut size={16} /> Sign out
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
