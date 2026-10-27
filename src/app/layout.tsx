@@ -45,8 +45,8 @@ export const metadata: Metadata = {
   },
 };
 
-// Runs before first paint: applies the saved theme (default = dark) to avoid a flash
-const themeInitScript = `(function(){try{var t=localStorage.getItem("theme");document.documentElement.dataset.theme=t==="light"?"light":"dark";}catch(e){document.documentElement.dataset.theme="dark";}})();`;
+// Runs before first paint: applies the saved theme (default = light) to avoid a flash
+const themeInitScript = `(function(){try{var t=localStorage.getItem("theme");document.documentElement.dataset.theme=t==="dark"?"dark":"light";}catch(e){document.documentElement.dataset.theme="light";}})();`;
 
 export default function RootLayout({
   children,
@@ -54,7 +54,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" data-theme="dark" data-preloading="true" className="scroll-smooth" suppressHydrationWarning>
+    <html
+      lang="en"
+      data-theme="light"
+      data-preloading="true"
+      className="scroll-smooth"
+      suppressHydrationWarning
+    >
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
         {/* If JavaScript is disabled, never block the site behind the preloader */}
