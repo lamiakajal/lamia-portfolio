@@ -10,7 +10,8 @@ export default function Loading() {
       role="status"
       aria-live="polite"
       aria-label="Loading content"
-      className="fixed inset-0 z-99 flex flex-col items-center justify-center bg-page/90 backdrop-blur-xl transition-all duration-300"
+      style={{ zIndex: 99999 }}
+      className="fixed inset-0 flex flex-col items-center justify-center bg-page/95 backdrop-blur-2xl transition-all duration-300"
     >
       <div className="relative flex flex-col items-center gap-5">
         {/* Ambient Glowing Backdrop */}

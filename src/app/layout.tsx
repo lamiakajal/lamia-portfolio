@@ -20,7 +20,6 @@ const plusJakarta = Plus_Jakarta_Sans({
   display: "swap",
 });
 
-// Professional SEO Metadata for Search Engines & Social Sharing
 export const metadata: Metadata = {
   metadataBase: new URL("https://lamiakajal.com"),
   title: "Lamia Kajal — Full Stack Developer",
@@ -51,7 +50,6 @@ export const metadata: Metadata = {
   },
 };
 
-// Runs before first paint: applies the saved theme (default = light) to avoid a flash
 const themeInitScript = `(function(){try{var t=localStorage.getItem("theme");document.documentElement.dataset.theme=t==="dark"?"dark":"light";}catch(e){document.documentElement.dataset.theme="light";}})();`;
 
 export default function RootLayout({
@@ -69,7 +67,6 @@ export default function RootLayout({
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
-        {/* If JavaScript is disabled, never block the site behind the preloader */}
         <noscript>
           <style
             dangerouslySetInnerHTML={{
@@ -83,7 +80,6 @@ export default function RootLayout({
         className={`${plusJakarta.className} relative min-h-screen bg-page text-slate-100 selection:bg-pink-500 selection:text-white`}
         suppressHydrationWarning
       >
-        {/* Route Transition Top Bar + Spinning Indicator for slow network */}
         <NextTopLoader
           color="#ec4899"
           initialPosition={0.08}
@@ -96,26 +92,17 @@ export default function RootLayout({
           shadow="0 0 10px #ec4899,0 0 5px #ec4899"
         />
 
-        {/* Loading page (shown once per full page load) */}
         <Preloader />
-
-        {/* Background Ambient Glows & Square Grid (whole website) */}
         <GlowBackground />
-
-        {/* Site-wide mouse / touch spotlight */}
         <CursorSpotlight />
-
-        {/* Bottom-right scroll progress / back-to-top button */}
         <ScrollToTop />
-
-        {/* Global Sticky Navbar */}
         <Navbar />
 
-        {/* Main Application Content with top padding for fixed navbar */}
         <main className="relative z-10 pt-20 min-h-[80vh]">{children}</main>
 
-        {/* Global Footer */}
-        <Footer />
+        <div className="relative z-0">
+          <Footer />
+        </div>
       </body>
     </html>
   );
