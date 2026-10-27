@@ -21,7 +21,7 @@ export default function AuthButton() {
   const boxRef = useRef<HTMLDivElement>(null);
   const userId = session?.user?.id;
 
-  // Ask the server whether this user is the admin
+  // Verify whether the authenticated user has administrative privileges
   useEffect(() => {
     if (!userId) return;
 
@@ -40,7 +40,7 @@ export default function AuthButton() {
     };
   }, [userId]);
 
-  // Close the menu when clicking outside or pressing Escape
+  // Handle dropdown dismiss on outside click or Escape key press
   useEffect(() => {
     if (!open) return;
     const onClick = (e: MouseEvent) => {
@@ -87,26 +87,28 @@ export default function AuthButton() {
     .toUpperCase();
 
   const handleSignOut = async () => {
+    setIsLoggingOut(true);
+    setOpen(false);
+    setIsAdmin(false);
+
     try {
-      setIsLoggingOut(true);
-      await authClient.signOut({
-        fetchOptions: {
-          onSuccess: () => {
-            setOpen(false);
-            setIsAdmin(false);
-            router.push("/");
-            router.refresh();
-          },
-        },
-      });
-      setOpen(false);
-      setIsAdmin(false);
-      router.push("/");
-      router.refresh();
-    } catch {
-      router.push("/");
-      router.refresh();
+      // Trigger signout request with a fallback timeout to prevent UI freezes
+      await Promise.race([
+        authClient.signOut(),
+        new Promise((resolve) => setTimeout(resolve, 1500)),
+      ]);
+    } catch (err) {
+      console.error("Sign out error:", err);
     } finally {
+      // Expire Better Auth session cookies explicitly across all scopes
+      document.cookie =
+        "better-auth.session_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+      document.cookie =
+        "__Secure-better-auth.session_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+
+      // Navigate to homepage and force refresh the Next.js router cache
+      router.push("/");
+      router.refresh();
       setIsLoggingOut(false);
     }
   };
