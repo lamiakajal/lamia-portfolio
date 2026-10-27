@@ -11,6 +11,22 @@ const nextConfig: NextConfig = {
       },
     },
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "avatars.githubusercontent.com",
+      },
+      {
+        protocol: "https",
+        hostname: "res.cloudinary.com",
+      },
+      {
+        protocol: "https",
+        hostname: "lh3.googleusercontent.com", // ভবিষ্যতে Google Login-এর প্রোফাইল ছবির জন্য
+      },
+    ],
+  },
 };
 
 export default nextConfig;
