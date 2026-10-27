@@ -12,6 +12,7 @@ import Footer from "@/components/layout/Footer";
 import Preloader from "@/components/ui/Preloader";
 import CursorSpotlight from "@/components/ui/CursorSpotlight";
 import ScrollToTop from "@/components/ui/ScrollToTop";
+import NextTopLoader from "nextjs-toploader";
 
 const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -77,6 +78,19 @@ export default function RootLayout({
         className={`${plusJakarta.className} relative min-h-screen bg-page text-slate-100 selection:bg-pink-500 selection:text-white`}
         suppressHydrationWarning
       >
+        {/* Route Transition Top Bar + Spinning Indicator for slow network */}
+        <NextTopLoader
+          color="#ec4899"
+          initialPosition={0.08}
+          crawlSpeed={200}
+          height={3}
+          crawl={true}
+          showSpinner={true}
+          easing="ease"
+          speed={200}
+          shadow="0 0 10px #ec4899,0 0 5px #ec4899"
+        />
+
         {/* Loading page (shown once per full page load) */}
         <Preloader />
 
