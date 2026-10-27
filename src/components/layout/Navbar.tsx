@@ -13,6 +13,7 @@ import { usePathname } from "next/navigation";
 import { Menu, X, ArrowRight, Code2, Sparkles } from "lucide-react";
 import { Outfit } from "next/font/google";
 import ThemeToggle from "@/components/ui/ThemeToggle";
+import AuthButton from "@/components/auth/AuthButton";
 
 const outfit = Outfit({
   subsets: ["latin"],
@@ -26,6 +27,7 @@ const links = [
   { id: "skills", label: "Skills" },
   { id: "education", label: "Education" },
   { id: "projects", label: "Projects" },
+  { id: "blog", label: "Blog", href: "/blog" },
   { id: "contact", label: "Contact" },
 ];
 
@@ -38,7 +40,11 @@ export default function Navbar() {
 
   // Multi-page site: on any page except the landing page, links go to "/#section"
   // On project pages the "Projects" link stays highlighted.
-  const active = pathname.startsWith("/projects") ? "projects" : spyActive;
+  const active = pathname.startsWith("/projects")
+    ? "projects"
+    : pathname.startsWith("/blog") || pathname.startsWith("/admin")
+      ? "blog"
+      : spyActive;
 
   const toggleMenu = () => setIsOpen((v) => !v);
   const closeMenu = () => setIsOpen(false);
@@ -168,7 +174,7 @@ export default function Navbar() {
             return (
               <Link
                 key={l.id}
-                href={`/#${l.id}`}
+                href={l.href ?? `/#${l.id}`}
                 aria-current={isActive ? "true" : undefined}
                 className={`relative py-1 transition-colors duration-300 ${
                   isActive
@@ -190,9 +196,10 @@ export default function Navbar() {
         {/* Right cluster: theme toggle, desktop CTA and mobile menu button */}
         <div className="flex items-center gap-3">
           <ThemeToggle />
+          <AuthButton />
 
           {/* Desktop CTA */}
-          <div className="hidden sm:flex items-center">
+          <div className="hidden sm:flex lg:hidden xl:flex items-center">
             <Link
               href="/#contact"
               className="nav-cta group relative overflow-hidden inline-flex items-center gap-2 rounded-full bg-linear-to-r from-pink-500/20 via-fuchsia-500/20 to-pink-500/20 border border-pink-500/50 px-5 py-2.5 text-xs font-semibold text-strong transition-all duration-300 shadow-[0_0_20px_rgba(236,72,153,0.3)] hover:shadow-[0_0_30px_rgba(236,72,153,0.6)] hover:scale-105 active:scale-95"
@@ -239,7 +246,7 @@ export default function Navbar() {
             {links.map((l, i) => (
               <Link
                 key={l.id}
-                href={`/#${l.id}`}
+                href={l.href ?? `/#${l.id}`}
                 onClick={closeMenu}
                 tabIndex={isOpen ? 0 : -1}
                 style={{ transitionDelay: isOpen ? `${i * 55}ms` : "0ms" }}
