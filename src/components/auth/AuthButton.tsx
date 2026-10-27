@@ -9,7 +9,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { LogIn, LogOut, PenSquare, LayoutList } from "lucide-react";
+import { LogIn, LogOut, PenSquare, LayoutList, Loader2 } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 
 export default function AuthButton() {
@@ -17,19 +17,24 @@ export default function AuthButton() {
   const { data: session, isPending } = authClient.useSession();
   const [open, setOpen] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
   const boxRef = useRef<HTMLDivElement>(null);
   const userId = session?.user?.id;
 
   // Ask the server whether this user is the admin
   useEffect(() => {
     if (!userId) return;
+
     let cancelled = false;
     fetch("/api/me")
       .then((r) => r.json())
       .then((d: { isAdmin?: boolean }) => {
-        if (!cancelled) setIsAdmin(Boolean(d.isAdmin));
+        if (!cancelled) {
+          setIsAdmin(Boolean(d.isAdmin));
+        }
       })
       .catch(() => {});
+
     return () => {
       cancelled = true;
     };
@@ -39,9 +44,14 @@ export default function AuthButton() {
   useEffect(() => {
     if (!open) return;
     const onClick = (e: MouseEvent) => {
-      if (boxRef.current && !boxRef.current.contains(e.target as Node)) setOpen(false);
+      if (boxRef.current && !boxRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
     };
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+
     document.addEventListener("mousedown", onClick);
     document.addEventListener("keydown", onKey);
     return () => {
@@ -51,7 +61,12 @@ export default function AuthButton() {
   }, [open]);
 
   if (isPending) {
-    return <span className="w-10 h-10 rounded-full bg-card border border-line animate-pulse" aria-hidden />;
+    return (
+      <span
+        className="w-10 h-10 rounded-full bg-card border border-line animate-pulse"
+        aria-hidden
+      />
+    );
   }
 
   if (!session) {
@@ -67,16 +82,37 @@ export default function AuthButton() {
     );
   }
 
-  const initial = (session.user.name || session.user.email || "?").charAt(0).toUpperCase();
-  const signOut = async () => {
-    await authClient.signOut();
-    setOpen(false);
-    setIsAdmin(false);
-    router.refresh();
+  const initial = (session.user.name || session.user.email || "?")
+    .charAt(0)
+    .toUpperCase();
+
+  const handleSignOut = async () => {
+    try {
+      setIsLoggingOut(true);
+      await authClient.signOut({
+        fetchOptions: {
+          onSuccess: () => {
+            setOpen(false);
+            setIsAdmin(false);
+            router.push("/");
+            router.refresh();
+          },
+        },
+      });
+      setOpen(false);
+      setIsAdmin(false);
+      router.push("/");
+      router.refresh();
+    } catch {
+      router.push("/");
+      router.refresh();
+    } finally {
+      setIsLoggingOut(false);
+    }
   };
 
   const item =
-    "flex w-full items-center gap-2.5 px-4 py-2.5 text-sm text-slate-200 hover:bg-pink-500/10 hover:text-pink-400 transition-colors";
+    "flex w-full items-center gap-2.5 px-4 py-2.5 text-sm text-slate-200 hover:bg-pink-500/10 hover:text-pink-400 transition-colors disabled:opacity-50";
 
   return (
     <div ref={boxRef} className="relative">
@@ -93,21 +129,47 @@ export default function AuthButton() {
       {open && (
         <div className="animate-fadeIn absolute right-0 mt-3 w-60 rounded-2xl bg-drawer border border-pink-500/30 shadow-2xl shadow-pink-500/20 overflow-hidden backdrop-blur-xl z-50">
           <div className="px-4 py-3 border-b border-line">
-            <p className="text-sm font-bold text-strong truncate">{session.user.name}</p>
-            <p className="text-xs text-slate-400 truncate">{session.user.email}</p>
+            <p className="text-sm font-bold text-strong truncate">
+              {session.user.name}
+            </p>
+            <p className="text-xs text-slate-400 truncate">
+              {session.user.email}
+            </p>
           </div>
           {isAdmin && (
             <>
-              <Link href="/admin/blog/new" onClick={() => setOpen(false)} className={item}>
+              <Link
+                href="/admin/blog/new"
+                onClick={() => setOpen(false)}
+                className={item}
+              >
                 <PenSquare size={16} /> Write a post
               </Link>
-              <Link href="/admin/blog" onClick={() => setOpen(false)} className={item}>
+              <Link
+                href="/admin/blog"
+                onClick={() => setOpen(false)}
+                className={item}
+              >
                 <LayoutList size={16} /> Manage posts
               </Link>
             </>
           )}
-          <button type="button" onClick={signOut} className={item}>
-            <LogOut size={16} /> Sign out
+          <button
+            type="button"
+            onClick={handleSignOut}
+            disabled={isLoggingOut}
+            className={item}
+          >
+            {isLoggingOut ? (
+              <>
+                <Loader2 size={16} className="animate-spin text-pink-400" />{" "}
+                Signing out...
+              </>
+            ) : (
+              <>
+                <LogOut size={16} /> Sign out
+              </>
+            )}
           </button>
         </div>
       )}
