@@ -36,6 +36,11 @@ export const metadata: Metadata = {
     "Web Developer Portfolio",
   ],
   authors: [{ name: "Lamia Kajal" }],
+  icons: {
+    icon: [{ url: "/icon.svg", type: "image/svg+xml" }],
+    shortcut: "/icon.svg",
+    apple: "/icon.svg",
+  },
   openGraph: {
     title: "Lamia Kajal — Full Stack Developer",
     description:
