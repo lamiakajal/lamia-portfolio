@@ -8,12 +8,10 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { LogIn, LogOut, PenSquare, LayoutList, Loader2 } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 
 export default function AuthButton() {
-  const router = useRouter();
   const { data: session, isPending } = authClient.useSession();
   const [open, setOpen] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
@@ -92,7 +90,7 @@ export default function AuthButton() {
     setIsAdmin(false);
 
     try {
-      // Trigger signout request with a fallback timeout to prevent UI freezes
+      // Send signout request to Better Auth backend with a 1.5s timeout barrier
       await Promise.race([
         authClient.signOut(),
         new Promise((resolve) => setTimeout(resolve, 1500)),
@@ -100,16 +98,21 @@ export default function AuthButton() {
     } catch (err) {
       console.error("Sign out error:", err);
     } finally {
-      // Expire Better Auth session cookies explicitly across all scopes
-      document.cookie =
-        "better-auth.session_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
-      document.cookie =
-        "__Secure-better-auth.session_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+      // Clear all Better Auth session cookies explicitly across root and current domain
+      const cookiesToClear = [
+        "better-auth.session_token",
+        "__Secure-better-auth.session_token",
+        "better-auth.session_data",
+        "__Secure-better-auth.session_data",
+      ];
 
-      // Navigate to homepage and force refresh the Next.js router cache
-      router.push("/");
-      router.refresh();
-      setIsLoggingOut(false);
+      cookiesToClear.forEach((name) => {
+        document.cookie = `${name}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;`;
+        document.cookie = `${name}=; path=/; domain=${window.location.hostname}; expires=Thu, 01 Jan 1970 00:00:00 UTC;`;
+      });
+
+      // Force a full browser navigation reload to flush all in-memory React session state
+      window.location.replace("/");
     }
   };
 
