@@ -11,6 +11,11 @@ import { Outfit } from "next/font/google";
 import { ArrowLeft, Clock, Calendar, User } from "lucide-react";
 import Reveal from "@/components/ui/Reveal";
 import ShareButtons from "@/components/blog/ShareButtons";
+import PostEngagement from "@/components/blog/PostEngagement";
+import MessageMe from "@/components/blog/MessageMe";
+import { getSession, isAdminUser } from "@/lib/session";
+import { getEngagement, listComments } from "@/lib/engagement";
+import { emptyCounts } from "@/lib/engagement-types";
 import { formatDate } from "@/components/blog/BlogCard";
 import { getPublishedPostBySlug } from "@/lib/blog";
 import { renderMarkdown } from "@/lib/markdown";
@@ -51,6 +56,19 @@ export default async function BlogPostPage({ params }: PageProps) {
   const { slug } = await params;
   const post = await getPublishedPostBySlug(slug).catch(() => null);
   if (!post) notFound();
+
+  // Reactions, saves and comments (the page still opens if this part fails)
+  const session = await getSession().catch(() => null);
+  const userId = session?.user?.id ?? null;
+  const [engagement, comments] = await Promise.all([
+    getEngagement(post.id, userId).catch(() => ({
+      counts: emptyCounts(),
+      mine: null,
+      saved: false,
+      commentCount: 0,
+    })),
+    listComments(post.id).catch(() => []),
+  ]);
 
   const url = `${contactInfo.website}/blog/${post.slug}`;
   const html = renderMarkdown(post.content);
@@ -112,6 +130,35 @@ export default async function BlogPostPage({ params }: PageProps) {
         <Reveal direction="up">
           <div className="mt-12 pt-8 border-t border-line">
             <ShareButtons url={url} title={post.title} />
+          </div>
+        </Reveal>
+
+        <Reveal direction="up">
+          <div className="mt-10">
+            <PostEngagement
+              postId={post.id}
+              slug={post.slug}
+              initial={engagement}
+              initialComments={comments}
+              user={
+                session
+                  ? {
+                      id: session.user.id,
+                      name: session.user.name || "Reader",
+                      isAdmin: isAdminUser(session.user),
+                    }
+                  : null
+              }
+            />
+          </div>
+        </Reveal>
+
+        <Reveal direction="up">
+          <div className="mt-12">
+            <MessageMe
+              loggedIn={Boolean(session)}
+              loginUrl={`/login?next=${encodeURIComponent(`/blog/${post.slug}`)}`}
+            />
           </div>
         </Reveal>
       </div>

@@ -17,6 +17,8 @@
 
 import { NextResponse } from "next/server";
 import { contactInfo } from "@/data/portfolioData";
+import { isDbConfigured } from "@/lib/mongodb";
+import { addMessage } from "@/lib/engagement";
 
 export const runtime = "nodejs";
 
@@ -77,6 +79,15 @@ export async function POST(request: Request) {
       { ok: false, error: "Too many messages. Please try again later." },
       { status: 429 },
     );
+
+  // Keep a copy in the admin inbox (/admin/inbox). Never blocks the email below.
+  if (isDbConfigured) {
+    try {
+      await addMessage({ name, email, subject, message, userId: null, source: "contact" });
+    } catch {
+      /* the email is still sent */
+    }
+  }
 
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {

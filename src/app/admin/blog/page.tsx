@@ -11,7 +11,7 @@ import { Pencil, Plus, ExternalLink } from "lucide-react";
 import DeletePostButton from "@/components/blog/DeletePostButton";
 import NotAdmin from "@/components/blog/NotAdmin";
 import { formatDate } from "@/components/blog/BlogCard";
-import { getSession, isAdminUser } from "@/lib/session";
+import { getSession, isAdminEmail, isAdminUser } from "@/lib/session";
 import { listAllPosts } from "@/lib/blog";
 import type { Post } from "@/lib/blog-types";
 
@@ -33,7 +33,11 @@ const badge: Record<string, string> = {
 export default async function AdminBlogPage() {
   const session = await getSession();
   if (!session) redirect("/login?next=/admin/blog");
-  if (!isAdminUser(session.user)) return <NotAdmin email={session.user.email} />;
+  if (!isAdminUser(session.user)) return <NotAdmin
+        email={session.user.email}
+        verified={Boolean(session.user.emailVerified)}
+        listed={isAdminEmail(session.user.email)}
+      />;
 
   let posts: Post[] = [];
   let problem = "";

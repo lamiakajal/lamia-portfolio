@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { Outfit } from "next/font/google";
 import PostEditor from "@/components/blog/PostEditor";
 import NotAdmin from "@/components/blog/NotAdmin";
-import { getSession, isAdminUser } from "@/lib/session";
+import { getSession, isAdminEmail, isAdminUser } from "@/lib/session";
 
 const outfit = Outfit({ subsets: ["latin"], weight: ["600", "700", "800"], display: "swap" });
 
@@ -15,7 +15,11 @@ export const metadata: Metadata = { title: "New post | Lamia Kajal", robots: { i
 export default async function NewPostPage() {
   const session = await getSession();
   if (!session) redirect("/login?next=/admin/blog/new");
-  if (!isAdminUser(session.user)) return <NotAdmin email={session.user.email} />;
+  if (!isAdminUser(session.user)) return <NotAdmin
+        email={session.user.email}
+        verified={Boolean(session.user.emailVerified)}
+        listed={isAdminEmail(session.user.email)}
+      />;
 
   return (
     <section className="w-full pt-6 pb-24">
