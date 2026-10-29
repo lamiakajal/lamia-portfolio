@@ -20,10 +20,10 @@ const outfit = Outfit({
 });
 
 const NAME = "Lamia Kajal";
-const LOAD_MS = 2400; // how long the progress bar takes (normal motion)
+const LOAD_MS = 1400; // how long the progress bar takes (normal motion)
 const LOAD_MS_REDUCED = 600; // shorter for prefers-reduced-motion
-const HOLD_MS = 350; // pause at 100% before the curtain opens
-const EXIT_MS = 1100; // curtain animation length
+const HOLD_MS = 150; // pause at 100% before the curtain opens
+const EXIT_MS = 900; // curtain animation length
 
 type Phase = "loading" | "exiting" | "done";
 
@@ -32,6 +32,17 @@ export default function Preloader() {
   const [phase, setPhase] = useState<Phase>("loading");
 
   useEffect(() => {
+    // Returning visitors in the same browser session never see the loading screen
+    // (the inline script in layout.tsx already hid it)
+    if (document.documentElement.hasAttribute("data-skip-preloader")) {
+      const skip = setTimeout(() => setPhase("done"), 0);
+      return () => clearTimeout(skip);
+    }
+    try {
+      sessionStorage.setItem("pl-seen", "1");
+    } catch {
+      /* storage can be blocked */
+    }
     document.documentElement.dataset.preloading = "true";
     document.body.style.overflow = "hidden"; // lock scroll while loading
 

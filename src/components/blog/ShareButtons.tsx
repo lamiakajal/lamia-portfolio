@@ -10,6 +10,7 @@ import React, { useState } from "react";
 import { Check, Link2, Share2 } from "lucide-react";
 import { FaFacebookF, FaLinkedinIn, FaWhatsapp } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
+import { useToast } from "@/components/ui/ToastProvider";
 
 interface ShareButtonsProps {
   url: string;
@@ -18,6 +19,7 @@ interface ShareButtonsProps {
 
 export default function ShareButtons({ url, title }: ShareButtonsProps) {
   const [copied, setCopied] = useState(false);
+  const toast = useToast();
   const u = encodeURIComponent(url);
   const t = encodeURIComponent(title);
 
@@ -32,6 +34,7 @@ export default function ShareButtons({ url, title }: ShareButtonsProps) {
     try {
       await navigator.clipboard.writeText(url);
       setCopied(true);
+      toast.success("Link copied. Paste it anywhere to share.", { title: "Copied" });
       setTimeout(() => setCopied(false), 1800);
     } catch {
       /* clipboard can be blocked: the other buttons still work */

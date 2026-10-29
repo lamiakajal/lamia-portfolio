@@ -80,6 +80,8 @@ EDUCATION = [
 ]
 TRAINING = [
     ("AI-Driven Full Stack Web Engineering (completed)", "Programming Hero"),
+    ("Full Stack & Web Development, Course 309 (certificate, 2025)", "Codemanbd"),
+    ("Additional certificates: UI/UX Design, Graphic and UI Design, WordPress & eCommerce", "Shikhbe Shobai, Codemanbd"),
     ("Music & Fine Arts", "Bulbul Academy of Fine Arts (BAFA)"),
 ]
 

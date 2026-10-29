@@ -8,15 +8,19 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { LogIn, LogOut, PenSquare, LayoutList, Loader2 } from "lucide-react";
+import { LogIn, LogOut, PenSquare, LayoutList, Loader2, Bookmark, Inbox } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
+import { useToast } from "@/components/ui/ToastProvider";
 
 export default function AuthButton() {
   const { data: session, isPending } = authClient.useSession();
   const [open, setOpen] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [unread, setUnread] = useState(0);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const boxRef = useRef<HTMLDivElement>(null);
+  const toast = useToast();
+  const userName = session?.user?.name;
   const userId = session?.user?.id;
 
   // Verify whether the authenticated user has administrative privileges
@@ -26,9 +30,10 @@ export default function AuthButton() {
     let cancelled = false;
     fetch("/api/me")
       .then((r) => r.json())
-      .then((d: { isAdmin?: boolean }) => {
+      .then((d: { isAdmin?: boolean; unread?: number }) => {
         if (!cancelled) {
           setIsAdmin(Boolean(d.isAdmin));
+          setUnread(d.unread ?? 0);
         }
       })
       .catch(() => {});
@@ -57,6 +62,24 @@ export default function AuthButton() {
       document.removeEventListener("keydown", onKey);
     };
   }, [open]);
+
+  // "Welcome" toast right after logging in, "Signed out" toast right after logging out
+  useEffect(() => {
+    if (isPending) return;
+    try {
+      if (userId && sessionStorage.getItem("auth-welcome")) {
+        sessionStorage.removeItem("auth-welcome");
+        toast.success(`Welcome${userName ? `, ${userName}` : ""}! You are now signed in.`, {
+          title: "Signed in",
+        });
+      } else if (!userId && sessionStorage.getItem("auth-bye")) {
+        sessionStorage.removeItem("auth-bye");
+        toast.info("You have been signed out. See you soon!", { title: "Signed out" });
+      }
+    } catch {
+      /* storage can be blocked */
+    }
+  }, [isPending, userId, userName, toast]);
 
   if (isPending) {
     return (
@@ -88,32 +111,27 @@ export default function AuthButton() {
     setIsLoggingOut(true);
     setOpen(false);
     setIsAdmin(false);
+    setUnread(0);
 
     try {
-      // Send signout request to Better Auth backend with a 1.5s timeout barrier
-      await Promise.race([
-        authClient.signOut(),
-        new Promise((resolve) => setTimeout(resolve, 1500)),
-      ]);
+      // The server ends the session and deletes the (httpOnly) login cookies
+      await fetch("/api/logout", { method: "POST", credentials: "same-origin" });
     } catch (err) {
       console.error("Sign out error:", err);
-    } finally {
-      // Clear all Better Auth session cookies explicitly across root and current domain
-      const cookiesToClear = [
-        "better-auth.session_token",
-        "__Secure-better-auth.session_token",
-        "better-auth.session_data",
-        "__Secure-better-auth.session_data",
-      ];
-
-      cookiesToClear.forEach((name) => {
-        document.cookie = `${name}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;`;
-        document.cookie = `${name}=; path=/; domain=${window.location.hostname}; expires=Thu, 01 Jan 1970 00:00:00 UTC;`;
-      });
-
-      // Force a full browser navigation reload to flush all in-memory React session state
-      window.location.replace("/");
     }
+    // Best effort: also tell the auth client (ignored if it fails)
+    await Promise.race([
+      authClient.signOut().catch(() => {}),
+      new Promise((resolve) => setTimeout(resolve, 800)),
+    ]);
+
+    try {
+      sessionStorage.setItem("auth-bye", "1");
+    } catch {
+      /* storage can be blocked */
+    }
+    // Full reload so no old session stays in memory
+    window.location.replace("/");
   };
 
   const item =
@@ -126,9 +144,14 @@ export default function AuthButton() {
         onClick={() => setOpen((o) => !o)}
         aria-label="Account menu"
         aria-expanded={open}
-        className="w-10 h-10 rounded-full bg-linear-to-br from-pink-500 to-fuchsia-500 text-white text-sm font-bold flex items-center justify-center shadow-[0_0_18px_rgba(236,72,153,0.4)] hover:scale-110 active:scale-90 transition-all"
+        className="relative w-10 h-10 rounded-full bg-linear-to-br from-pink-500 to-fuchsia-500 text-white text-sm font-bold flex items-center justify-center shadow-[0_0_18px_rgba(236,72,153,0.4)] hover:scale-110 active:scale-90 transition-all"
       >
         {initial}
+        {unread > 0 && (
+          <span className="absolute -top-1 -right-1 min-w-5 h-5 px-1 rounded-full bg-red-500 text-[10px] font-bold text-white flex items-center justify-center ring-2 ring-(--bg)">
+            {unread > 9 ? "9+" : unread}
+          </span>
+        )}
       </button>
 
       {open && (
@@ -141,6 +164,9 @@ export default function AuthButton() {
               {session.user.email}
             </p>
           </div>
+          <Link href="/saved" onClick={() => setOpen(false)} className={item}>
+            <Bookmark size={16} /> Saved posts
+          </Link>
           {isAdmin && (
             <>
               <Link
@@ -156,6 +182,13 @@ export default function AuthButton() {
                 className={item}
               >
                 <LayoutList size={16} /> Manage posts
+              </Link>
+              <Link
+                href="/admin/inbox"
+                onClick={() => setOpen(false)}
+                className={item}
+              >
+                <Inbox size={16} /> Inbox{unread > 0 ? ` (${unread})` : ""}
               </Link>
             </>
           )}

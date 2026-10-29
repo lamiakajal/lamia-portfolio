@@ -168,3 +168,21 @@ export async function deletePost(id: string): Promise<boolean> {
   const result = await posts().deleteOne({ _id: new ObjectId(id) });
   return result.deletedCount === 1;
 }
+
+/** Is there a PUBLISHED post with this id? (used before saving a reaction / comment) */
+export async function isPublishedPostId(id: string): Promise<boolean> {
+  if (!ObjectId.isValid(id)) return false;
+  const doc = await posts().findOne({ _id: new ObjectId(id), status: "published" });
+  return Boolean(doc);
+}
+
+/** Published posts for a list of ids, in the same order as the ids (used by the Saved page) */
+export async function getPublishedPostsByIds(ids: string[]): Promise<Post[]> {
+  const valid = ids.filter((id) => ObjectId.isValid(id));
+  if (valid.length === 0) return [];
+  const docs = await posts()
+    .find({ _id: { $in: valid.map((id) => new ObjectId(id)) }, status: "published" })
+    .toArray();
+  const byId = new Map(docs.map((d) => [d._id.toHexString(), toPost(d)]));
+  return valid.map((id) => byId.get(id)).filter((p): p is Post => Boolean(p));
+}

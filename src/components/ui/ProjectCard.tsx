@@ -42,7 +42,12 @@ export default function ProjectCard({
         aria-label={`View details of ${project.title}`}
         className="block"
       >
-        <ProjectCover project={project} className="aspect-16/10 w-full" />
+        <ProjectCover
+          project={project}
+          size="card"
+          priority={index < 3}
+          className="aspect-16/10 w-full"
+        />
       </Link>
 
       <div className="flex flex-col flex-1 p-5 sm:p-6">

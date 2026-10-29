@@ -4,7 +4,8 @@
 // HOW TO ADD A NEW PROJECT
 //   1. Copy the TEMPLATE block below, paste it at the TOP of `projectsData`
 //      and fill in the fields.
-//   2. Put its screenshot in /public/projects/ and set  image: "/projects/my-project.png"
+//   2. Put its screenshot in /public/projects/ and set  image: "/projects/my-project.webp"
+//      (optional, for faster cards: also add a ~720px wide copy and set  imageSmall: "/projects/my-project-sm.webp")
 //      (a tall full-page screenshot is fine: it is shown inside a browser mock-up that
 //      scrolls automatically). Leave  image: ""  to show generated cover art.
 //   3. Set  featured: true  to show it on the home page.
@@ -19,7 +20,8 @@
 //   id: "6",                           // any unique text
 //   slug: "my-project",                // used in the URL: /projects/my-project (lowercase, no spaces)
 //   title: "My Project",
-//   image: "/projects/my-project.png", // or "" for generated cover art
+//   image: "/projects/my-project.webp", // or "" for generated cover art
+//   imageSize: [1400, 3000],            // width and height of that file in pixels
 //   category: "Web Apps",              // groups the filter buttons (e.g. "Landing Pages")
 //   featured: true,
 //   techStack: ["Next.js", "TypeScript"],
@@ -40,6 +42,10 @@ export interface Project {
   title: string;
   /** Screenshot path inside /public (e.g. "/projects/axit.png"), or "" for generated cover art */
   image: string;
+  /** [width, height] in pixels of the screenshot file (lets the site resize it = faster) */
+  imageSize?: [number, number];
+  /** Small version (about 720px wide) used on cards so they load fast. Optional. */
+  imageSmall?: string;
   category: string;
   /** true = shown on the home page, false = only on the /projects page */
   featured: boolean;
@@ -59,6 +65,8 @@ export const projectsData: Project[] = [
     slug: "bazar-dor",
     title: "BazarDor (বাজার দর)",
     image: "/projects/bazar-dor.webp",
+    imageSize: [1335, 2086],
+    imageSmall: "/projects/bazar-dor-sm.webp",
     category: "Full-Stack Apps",
     featured: true,
     techStack: [
@@ -91,6 +99,8 @@ export const projectsData: Project[] = [
     slug: "fit-log",
     title: "FitLog: Workout Library & Daily Lift Tracker",
     image: "/projects/fit-log.webp",
+    imageSize: [1327, 3298],
+    imageSmall: "/projects/fit-log-sm.webp",
     category: "Web Apps",
     featured: true,
     techStack: [
@@ -123,6 +133,8 @@ export const projectsData: Project[] = [
     slug: "axit-landing-page",
     title: "AXIT: Modern Responsive SaaS Landing Page",
     image: "/projects/axit-landing-page.webp",
+    imageSize: [1400, 4838],
+    imageSmall: "/projects/axit-landing-page-sm.webp",
     category: "Landing Pages",
     featured: true,
     techStack: ["Next.js", "React", "Tailwind CSS v4", "React Icons", "Vercel"],
@@ -149,6 +161,8 @@ export const projectsData: Project[] = [
     slug: "lucid-landing-page",
     title: "Lucid: High-Performance SaaS Landing Page",
     image: "/projects/lucid-landing-page.webp",
+    imageSize: [1400, 5768],
+    imageSmall: "/projects/lucid-landing-page-sm.webp",
     category: "Landing Pages",
     featured: false,
     techStack: ["Next.js", "React", "Tailwind CSS", "React Icons", "Vercel"],
@@ -172,6 +186,8 @@ export const projectsData: Project[] = [
     slug: "devstack",
     title: "DevStack: Build Your Ideal Dev Stack",
     image: "/projects/devstack.webp",
+    imageSize: [1400, 2509],
+    imageSmall: "/projects/devstack-sm.webp",
     category: "Web Apps",
     featured: false,
     techStack: [
@@ -309,3 +325,62 @@ export const siteImages = {
     position: "50% 68%",
   },
 };
+
+// ==========================================
+// CLIENT REVIEWS / TESTIMONIALS
+//
+// Real reviews only. HOW TO ADD ONE:
+//   1. Open the review on Google / Facebook / LinkedIn.
+//   2. Copy the text exactly as the client wrote it (you may shorten it with "...").
+//   3. Copy one block from the TEMPLATE below, paste it inside `testimonials` and fill it in.
+//   Until you add reviews, the section shows buttons that open your review pages.
+//
+// TEMPLATE:
+//   {
+//     name: "Client Name",
+//     role: "Owner, Company Name",                 // optional
+//     text: "What the client wrote about your work.",
+//     source: "google",                             // "google" | "facebook" | "linkedin"
+//     rating: 5,                                    // optional, 1 to 5 (Google reviews have stars)
+//     url: "https://...",                           // optional: link to this exact review
+//   },
+// ==========================================
+export type ReviewSource = "google" | "facebook" | "linkedin";
+
+export interface Testimonial {
+  name: string;
+  role?: string;
+  text: string;
+  source: ReviewSource;
+  rating?: 1 | 2 | 3 | 4 | 5;
+  url?: string;
+}
+
+export const testimonials: Testimonial[] = [];
+
+/** Where clients left their reviews (these links open the real pages) */
+export const reviewPlatforms: {
+  source: ReviewSource;
+  label: string;
+  href: string;
+  hint: string;
+}[] = [
+  {
+    source: "google",
+    label: "Google Business",
+    href: "https://share.google/5NFQZdOimXlq6Ig2q",
+    hint: "Read the client reviews on Google",
+  },
+  {
+    source: "facebook",
+    label: "Facebook Page",
+    href: "https://www.facebook.com/lamiakajalofficial",
+    hint: "See feedback on my Facebook page",
+  },
+  {
+    source: "linkedin",
+    label: "LinkedIn",
+    href: "https://www.linkedin.com/in/lamiakajal/details/recommendations/",
+    hint: "Read recommendations on LinkedIn",
+  },
+];

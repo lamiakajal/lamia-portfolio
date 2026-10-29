@@ -20,7 +20,9 @@ const pick = (slug: string) =>
   gradients.length;
 
 interface ProjectCoverProps {
-  project: Pick<Project, "title" | "slug" | "image" | "techStack">;
+  project: Pick<Project, "title" | "slug" | "image" | "techStack"> & { imageSmall?: string };
+  /** "card" uses the small image when there is one; "full" always uses the big screenshot */
+  size?: "card" | "full";
   className?: string;
   priority?: boolean;
 }
@@ -29,10 +31,12 @@ export default function ProjectCover({
   project,
   className = "",
   priority = false,
+  size = "full",
 }: ProjectCoverProps) {
+  const src = size === "card" && project.imageSmall ? project.imageSmall : project.image;
   // Real screenshot: shown inside a browser mock-up. A tall full-page screenshot
   // scrolls from top to bottom automatically (loop), so visitors see the whole website.
-  if (project.image) {
+  if (src) {
     return (
       <div
         className={`relative overflow-hidden bg-linear-to-br ${gradients[pick(project.slug)]} ${className}`}
@@ -58,9 +62,10 @@ export default function ProjectCover({
             {/* Plain <img> on purpose: screenshots have unknown, often very tall, sizes */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src={project.image}
+              src={src}
               alt={`${project.title} preview`}
               loading={priority ? "eager" : "lazy"}
+              decoding="async"
               className="shot-scroll block w-full h-auto"
             />
           </div>

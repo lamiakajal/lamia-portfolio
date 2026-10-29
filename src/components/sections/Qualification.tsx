@@ -1,9 +1,10 @@
 // ==========================================
 // Component: Education Section
-// Description: Animated education page section with three parts:
-//              1) Academic timeline (BBA, HSC, SSC, Primary, Pre-school)
-//              2) Professional learning (Programming Hero course, self-learning)
-//              3) Co-curricular & cultural education (Music & Fine Arts)
+// Description: Animated education section with four parts (in this order):
+//              1) Professional learning (Programming Hero course, self-learning)
+//              2) Certificates (click one to open it full size)
+//              3) Academic timeline (BBA, HSC, SSC, Primary, Pre-school)
+//              4) Co-curricular & cultural education (Music & Fine Arts)
 //              The centre line draws itself, cards slide in from alternating sides
 //              and every animation replays when you scroll back (up & down).
 // Theme: dark (default) and light via the CSS tokens in globals.css
@@ -12,7 +13,8 @@
 
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
+import Image from "next/image";
 import { Outfit } from "next/font/google";
 import {
   GraduationCap,
@@ -25,6 +27,11 @@ import {
   Baby,
   Music,
   Laptop,
+  Award,
+  X,
+  ZoomIn,
+  ChevronLeft,
+  ChevronRight,
   type LucideIcon,
 } from "lucide-react";
 import Reveal from "@/components/ui/Reveal";
@@ -121,6 +128,54 @@ const cultural: EducationItem[] = [
     level: "Co-Curricular",
     text: "Creative training in music and fine arts, the creative side that shapes how I think about design, rhythm and detail in everything I build.",
     tags: ["Music", "Fine Arts"],
+  },
+];
+
+// 2) Certificates
+// HOW TO ADD A NEW CERTIFICATE (for example a programming course):
+//   1. Put the picture in /public/certificates/ (a .webp or .jpg file, about 1600px wide).
+//   2. Copy one block below, paste it at the TOP of the list and change the text.
+//   `featured: true` adds a "Core skill" badge (used for the full-stack course).
+interface Certificate {
+  title: string;
+  issuer: string;
+  date: string;
+  /** Full size picture (shown when the card is opened) */
+  image: string;
+  /** Small picture used on the card */
+  imageSmall: string;
+  featured?: boolean;
+}
+
+const certificates: Certificate[] = [
+  {
+    title: "Full Stack & Web Development (Course 309)",
+    issuer: "Codemanbd",
+    date: "2025",
+    image: "/certificates/codemanbd-full-stack-web-development.webp",
+    imageSmall: "/certificates/codemanbd-full-stack-web-development-sm.webp",
+    featured: true,
+  },
+  {
+    title: "WordPress & eCommerce (Course 318)",
+    issuer: "Codemanbd",
+    date: "2025",
+    image: "/certificates/codemanbd-wordpress-ecommerce.webp",
+    imageSmall: "/certificates/codemanbd-wordpress-ecommerce-sm.webp",
+  },
+  {
+    title: "UI/UX Design (Batch SSB_599)",
+    issuer: "Shikhbe Shobai",
+    date: "May 2024",
+    image: "/certificates/shikhbe-shobai-ui-ux-design.webp",
+    imageSmall: "/certificates/shikhbe-shobai-ui-ux-design-sm.webp",
+  },
+  {
+    title: "Graphic and UI Design (Batch SSB_551)",
+    issuer: "Shikhbe Shobai",
+    date: "Aug 2023",
+    image: "/certificates/shikhbe-shobai-graphic-ui-design.webp",
+    imageSmall: "/certificates/shikhbe-shobai-graphic-ui-design-sm.webp",
   },
 ];
 
@@ -236,6 +291,26 @@ function EduCard({ item, index = 0 }: { item: EducationItem; index?: number }) {
    ========================================================================== */
 
 export default function Education() {
+  // Which certificate is open in the full-size viewer (null = closed)
+  const [openCert, setOpenCert] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (openCert === null) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpenCert(null);
+      if (e.key === "ArrowRight")
+        setOpenCert((i) => (i === null ? i : (i + 1) % certificates.length));
+      if (e.key === "ArrowLeft")
+        setOpenCert((i) =>
+          i === null ? i : (i - 1 + certificates.length) % certificates.length,
+        );
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [openCert]);
+
+  const current = openCert === null ? null : certificates[openCert];
+
   return (
     <section
       id="education"
@@ -271,7 +346,85 @@ export default function Education() {
         </Reveal>
 
         {/* ------------------------------------------------------------------
-            1. ACADEMIC TIMELINE
+            1. PROFESSIONAL LEARNING
+        ------------------------------------------------------------------ */}
+        <div>
+          <Reveal direction="left">
+            <GroupHeading icon={Laptop} title="Professional Learning" />
+          </Reveal>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
+            {professional.map((item, i) => (
+              <Reveal key={item.title} direction="up" delay={i * 130}>
+                <EduCard item={item} index={i + 1} />
+              </Reveal>
+            ))}
+          </div>
+        </div>
+
+        {/* ------------------------------------------------------------------
+            2. CERTIFICATES
+        ------------------------------------------------------------------ */}
+        <div>
+          <Reveal direction="left">
+            <GroupHeading icon={Award} title="Certificates" />
+          </Reveal>
+          <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6">
+            {certificates.map((cert, i) => (
+              <Reveal key={cert.title} direction="up" delay={i * 110}>
+                <button
+                  type="button"
+                  onClick={() => setOpenCert(i)}
+                  aria-label={`Open certificate: ${cert.title}`}
+                  className="glow-card loop-bob group relative w-full h-full flex flex-col text-left rounded-2xl bg-card border border-line overflow-hidden"
+                  style={
+                    {
+                      "--bob-delay": `${i * 0.5}s`,
+                      "--bob-dur": "7s",
+                    } as React.CSSProperties
+                  }
+                >
+                  <div className="relative aspect-4/3 w-full overflow-hidden bg-white">
+                    <Image
+                      src={cert.imageSmall}
+                      alt={`${cert.title} certificate`}
+                      fill
+                      sizes="(max-width: 640px) 92vw, (max-width: 1024px) 45vw, 22vw"
+                      className="object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
+                    <span className="absolute inset-0 flex items-center justify-center bg-black/0 group-hover:bg-black/35 transition-colors duration-300">
+                      <ZoomIn
+                        size={30}
+                        className="text-white opacity-0 scale-75 group-hover:opacity-100 group-hover:scale-100 transition-all duration-300"
+                      />
+                    </span>
+                    {cert.featured && (
+                      <span className="absolute top-3 left-3 px-2.5 py-1 rounded-full bg-linear-to-r from-pink-600 to-fuchsia-500 text-[10px] font-bold uppercase tracking-widest text-white shadow-lg">
+                        Core skill
+                      </span>
+                    )}
+                  </div>
+                  <div className="flex flex-col flex-1 p-4">
+                    <h4
+                      className={`text-sm sm:text-base font-bold text-strong leading-snug mb-2 ${outfit.className}`}
+                    >
+                      {cert.title}
+                    </h4>
+                    <p className="mt-auto flex items-center justify-between gap-2 text-xs text-slate-400">
+                      <span className="flex items-center gap-1.5 font-medium text-pink-300">
+                        <Building2 size={13} className="shrink-0" />
+                        {cert.issuer}
+                      </span>
+                      <span>{cert.date}</span>
+                    </p>
+                  </div>
+                </button>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+
+        {/* ------------------------------------------------------------------
+            3. ACADEMIC TIMELINE
         ------------------------------------------------------------------ */}
         <div>
           <Reveal direction="left">
@@ -324,27 +477,14 @@ export default function Education() {
         </div>
 
         {/* ------------------------------------------------------------------
-            2. PROFESSIONAL LEARNING
+            4. CO-CURRICULAR & CULTURAL EDUCATION
         ------------------------------------------------------------------ */}
         <div>
           <Reveal direction="left">
-            <GroupHeading icon={Laptop} title="Professional Learning" />
-          </Reveal>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
-            {professional.map((item, i) => (
-              <Reveal key={item.title} direction="up" delay={i * 130}>
-                <EduCard item={item} index={i + 1} />
-              </Reveal>
-            ))}
-          </div>
-        </div>
-
-        {/* ------------------------------------------------------------------
-            3. CO-CURRICULAR & CULTURAL EDUCATION
-        ------------------------------------------------------------------ */}
-        <div>
-          <Reveal direction="left">
-            <GroupHeading icon={Music} title="Co-Curricular & Cultural Education" />
+            <GroupHeading
+              icon={Music}
+              title="Co-Curricular & Cultural Education"
+            />
           </Reveal>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
             {cultural.map((item, i) => (
@@ -355,6 +495,70 @@ export default function Education() {
           </div>
         </div>
       </div>
+
+      {/* Full-size certificate viewer */}
+      {current && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label={current.title}
+          className="animate-fadeIn fixed inset-0 z-90 flex items-center justify-center bg-black/85 p-3 sm:p-8"
+          onClick={() => setOpenCert(null)}
+        >
+          <div
+            className="relative w-full max-w-5xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <Image
+              src={current.image}
+              alt={`${current.title} certificate`}
+              width={1600}
+              height={1200}
+              sizes="(max-width: 1024px) 96vw, 1024px"
+              unoptimized
+              className="w-full h-auto max-h-[80vh] object-contain rounded-xl bg-white shadow-2xl"
+            />
+            <p className="mt-3 text-center text-sm text-white">
+              <span className="font-semibold">{current.title}</span> •{" "}
+              {current.issuer} • {current.date}
+            </p>
+            <button
+              type="button"
+              onClick={() => setOpenCert(null)}
+              aria-label="Close"
+              className="absolute -top-3 -right-1 sm:-right-3 w-10 h-10 rounded-full bg-pink-600 text-white flex items-center justify-center shadow-lg hover:scale-110 active:scale-90 transition-transform"
+            >
+              <X size={20} />
+            </button>
+            <button
+              type="button"
+              onClick={() =>
+                setOpenCert((i) =>
+                  i === null
+                    ? i
+                    : (i - 1 + certificates.length) % certificates.length,
+                )
+              }
+              aria-label="Previous certificate"
+              className="absolute left-1 sm:-left-5 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/60 text-white flex items-center justify-center hover:bg-pink-600 transition-colors"
+            >
+              <ChevronLeft size={22} />
+            </button>
+            <button
+              type="button"
+              onClick={() =>
+                setOpenCert((i) =>
+                  i === null ? i : (i + 1) % certificates.length,
+                )
+              }
+              aria-label="Next certificate"
+              className="absolute right-1 sm:-right-5 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/60 text-white flex items-center justify-center hover:bg-pink-600 transition-colors"
+            >
+              <ChevronRight size={22} />
+            </button>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

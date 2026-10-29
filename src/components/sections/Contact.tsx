@@ -42,6 +42,7 @@ import {
 import { FaXTwitter } from "react-icons/fa6";
 import Reveal from "@/components/ui/Reveal";
 import Typewriter from "@/components/ui/Typewriter";
+import { useToast } from "@/components/ui/ToastProvider";
 import { contactInfo, socialLinks } from "@/data/portfolioData";
 
 const outfit = Outfit({
@@ -146,6 +147,7 @@ export default function Contact() {
   const [status, setStatus] = useState<Status>("idle");
   const [errorText, setErrorText] = useState("");
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
+  const toast = useToast();
 
   const update =
     (field: keyof typeof emptyForm) =>
@@ -157,6 +159,7 @@ export default function Contact() {
     try {
       await navigator.clipboard.writeText(text);
       setCopiedKey(key);
+      toast.success("Copied to clipboard.", { title: "Copied" });
       setTimeout(() => setCopiedKey(null), 1800);
     } catch {
       /* clipboard can be blocked; the link next to it still works */
@@ -179,6 +182,7 @@ export default function Contact() {
 
       if (res.ok && data.ok) {
         setStatus("success");
+        toast.success("Thank you! I will reply to your email soon.", { title: "Message sent" });
         setForm(emptyForm);
         return;
       }
@@ -194,6 +198,7 @@ export default function Contact() {
       }
 
       setErrorText(data.error ?? "Something went wrong. Please try again.");
+      toast.error(data.error ?? "Something went wrong. Please try again.", { title: "Message not sent" });
       setStatus("error");
     } catch {
       setErrorText(

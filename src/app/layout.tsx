@@ -105,7 +105,7 @@ export default function RootLayout({
       >
         <a
           href="#main"
-          className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:rounded-full focus:bg-pink-600 focus:px-5 focus:py-2.5 focus:text-sm focus:font-semibold focus:text-white"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-100 focus:rounded-full focus:bg-pink-600 focus:px-5 focus:py-2.5 focus:text-sm focus:font-semibold focus:text-white"
         >
           Skip to content
         </a>
@@ -114,17 +114,19 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
         />
         <ToastProvider>
-        <Preloader />
-        <GlowBackground />
-        <CursorSpotlight />
-        <ScrollToTop />
-        <Navbar />
+          <Preloader />
+          <GlowBackground />
+          <CursorSpotlight />
+          <ScrollToTop />
+          <Navbar />
 
-        <main id="main" className="relative z-10 pt-20 min-h-[80vh]">{children}</main>
+          <main id="main" className="relative z-10 pt-20 min-h-[80vh]">
+            {children}
+          </main>
 
-        <div className="relative z-0">
-          <Footer />
-        </div>
+          <div className="relative z-0">
+            <Footer />
+          </div>
         </ToastProvider>
       </body>
     </html>

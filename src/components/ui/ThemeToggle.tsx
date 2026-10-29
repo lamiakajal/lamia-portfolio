@@ -1,6 +1,6 @@
 // ==========================================
 // Component: ThemeToggle
-// Description: Dark / Light mode switch. Dark is the default theme.
+// Description: Dark / Light mode switch. Light is the default theme.
 //              The choice is saved in localStorage and applied before first paint
 //              by the inline script in layout.tsx (no flash of wrong theme).
 // ==========================================
@@ -27,8 +27,8 @@ function subscribe(callback: () => void) {
 const getSnapshot = (): Theme =>
   document.documentElement.dataset.theme === "light" ? "light" : "dark";
 
-// Server always renders the default (dark) theme
-const getServerSnapshot = (): Theme => "dark";
+// Server always renders the default (light) theme
+const getServerSnapshot = (): Theme => "light";
 
 export default function ThemeToggle() {
   const theme = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
