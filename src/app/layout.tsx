@@ -3,7 +3,7 @@
 // Author: Lamia Kajal (Full Stack Developer)
 // ==========================================
 
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import GlowBackground from "@/components/ui/GlowBackground";
@@ -12,7 +12,8 @@ import Footer from "@/components/layout/Footer";
 import Preloader from "@/components/ui/Preloader";
 import CursorSpotlight from "@/components/ui/CursorSpotlight";
 import ScrollToTop from "@/components/ui/ScrollToTop";
-import NextTopLoader from "nextjs-toploader";
+import { ToastProvider } from "@/components/ui/ToastProvider";
+import { contactInfo, socialLinks } from "@/data/portfolioData";
 
 const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -20,7 +21,29 @@ const plusJakarta = Plus_Jakarta_Sans({
   display: "swap",
 });
 
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#fdf6fb" },
+    { media: "(prefers-color-scheme: dark)", color: "#05010a" },
+  ],
+};
+
+// Helps Google understand who this website belongs to
+const personJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: "Lamia Kajal",
+  jobTitle: "Full Stack Developer",
+  url: contactInfo.website,
+  email: `mailto:${contactInfo.email}`,
+  sameAs: socialLinks
+    .map((s) => s.href)
+    .filter((href) => href.startsWith("https://") && !href.includes("wa.me")),
+};
+
 export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+  twitter: { card: "summary_large_image" },
   metadataBase: new URL("https://lamiakajal.com"),
   title: "Lamia Kajal — Full Stack Developer",
   description:
@@ -50,7 +73,7 @@ export const metadata: Metadata = {
   },
 };
 
-const themeInitScript = `(function(){try{var t=localStorage.getItem("theme");document.documentElement.dataset.theme=t==="dark"?"dark":"light";}catch(e){document.documentElement.dataset.theme="light";}})();`;
+const themeInitScript = `(function(){try{var t=localStorage.getItem("theme");document.documentElement.dataset.theme=t==="dark"?"dark":"light";}catch(e){document.documentElement.dataset.theme="light";}try{if(sessionStorage.getItem("pl-seen")){document.documentElement.setAttribute("data-skip-preloader","1");document.documentElement.removeAttribute("data-preloading");}}catch(e){}})();`;
 
 export default function RootLayout({
   children,
@@ -80,29 +103,31 @@ export default function RootLayout({
         className={`${plusJakarta.className} relative min-h-screen bg-page text-slate-100 selection:bg-pink-500 selection:text-white`}
         suppressHydrationWarning
       >
-        <NextTopLoader
-          color="#ec4899"
-          initialPosition={0.08}
-          crawlSpeed={200}
-          height={3}
-          crawl={true}
-          showSpinner={true}
-          easing="ease"
-          speed={200}
-          shadow="0 0 10px #ec4899,0 0 5px #ec4899"
+        <a
+          href="#main"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-100 focus:rounded-full focus:bg-pink-600 focus:px-5 focus:py-2.5 focus:text-sm focus:font-semibold focus:text-white"
+        >
+          Skip to content
+        </a>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
         />
+        <ToastProvider>
+          <Preloader />
+          <GlowBackground />
+          <CursorSpotlight />
+          <ScrollToTop />
+          <Navbar />
 
-        <Preloader />
-        <GlowBackground />
-        <CursorSpotlight />
-        <ScrollToTop />
-        <Navbar />
+          <main id="main" className="relative z-10 pt-20 min-h-[80vh]">
+            {children}
+          </main>
 
-        <main className="relative z-10 pt-20 min-h-[80vh]">{children}</main>
-
-        <div className="relative z-0">
-          <Footer />
-        </div>
+          <div className="relative z-0">
+            <Footer />
+          </div>
+        </ToastProvider>
       </body>
     </html>
   );

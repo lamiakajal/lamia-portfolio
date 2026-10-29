@@ -319,11 +319,9 @@
    -------------------------------------------------------------------------- */
 .reveal {
   opacity: 0;
-  filter: blur(6px);
   transition:
-    opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.9s cubic-bezier(0.22, 1, 0.36, 1),
-    filter 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+    opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
   will-change: transform, opacity;
 }
 .reveal[data-dir="up"] {
@@ -343,7 +341,6 @@
 }
 .reveal[data-visible="true"] {
   opacity: 1;
-  filter: blur(0);
   transform: none;
   /* The stagger delay applies only when appearing, not when hiding again */
   transition-delay: var(--reveal-delay, 0ms);
@@ -465,7 +462,6 @@
     animation: none;
   }
   .reveal {
-    filter: none;
     transform: none;
     transition: opacity 0.7s ease var(--reveal-delay, 0ms);
   }
@@ -657,13 +653,11 @@ html[data-preloading="true"] .nav-drop {
 @keyframes skillPop {
   from {
     opacity: 0;
-    transform: translateY(24px) scale(0.92);
-    filter: blur(4px);
+    transform: translateY(24px) scale(0.94);
   }
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
-    filter: blur(0);
   }
 }
 .skill-pop {
@@ -827,8 +821,10 @@ html[data-preloading="true"] .nav-drop {
   animation-play-state: paused;
 }
 
-/* Phones: smaller float distance and lighter blur so loops stay smooth */
-@media (max-width: 767.98px) {
+/* Phones & touch screens: smaller float distance, and NO static pink glow blobs.
+   The pink light only appears where you touch / while you scroll (CursorSpotlight),
+   exactly like the mouse spotlight on a computer. This also makes the page lighter. */
+@media (max-width: 767.98px), (hover: none) and (pointer: coarse) {
   .loop-bob {
     --bob-amp: -5px;
   }
@@ -837,8 +833,13 @@ html[data-preloading="true"] .nav-drop {
   .blur-\[130px\],
   .blur-\[140px\],
   .blur-\[150px\] {
-    --tw-blur: blur(60px);
+    display: none;
   }
+}
+
+/* Returning visitors skip the loading screen */
+html[data-skip-preloader] .preloader {
+  display: none;
 }
 
 /* Project screenshots: the image scrolls top -> bottom -> top inside its browser frame.
@@ -961,4 +962,119 @@ html[data-preloading="true"] .nav-drop {
   height: 1px;
   background: var(--line);
   margin: 2rem 0;
+}
+
+/* ==========================================================================
+   10. TOAST NOTIFICATIONS (see ToastProvider.tsx)
+   ========================================================================== */
+@keyframes toastIn {
+  0% {
+    opacity: 0;
+    transform: translateX(110%) scale(0.9);
+    filter: blur(6px);
+  }
+  60% {
+    opacity: 1;
+    transform: translateX(-6px) scale(1.02);
+    filter: blur(0);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+@keyframes toastOut {
+  0% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(110%) scale(0.92);
+    filter: blur(4px);
+  }
+}
+.toast-in {
+  animation: toastIn 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.toast-out {
+  animation: toastOut 0.38s cubic-bezier(0.55, 0, 1, 0.45) both;
+}
+@keyframes toastBar {
+  from {
+    transform: scaleX(1);
+  }
+  to {
+    transform: scaleX(0);
+  }
+}
+.toast-bar {
+  animation-name: toastBar;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+}
+@keyframes toastDraw {
+  from {
+    stroke-dashoffset: 30;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+.toast-draw {
+  stroke-dasharray: 30;
+  stroke-dashoffset: 30;
+  animation: toastDraw 0.5s ease-out 0.25s forwards;
+}
+.toast-draw-2 {
+  animation-delay: 0.5s;
+}
+@media (max-width: 639.98px) {
+  .toast-in {
+    animation-name: toastInMobile;
+  }
+}
+@keyframes toastInMobile {
+  0% {
+    opacity: 0;
+    transform: translateY(-30px) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Speed: big blurred glows are expensive to paint, so use a smaller blur radius (looks the same
+   because the glows are very faint) and let the GPU animate them. */
+.blur-\[100px\],
+.blur-\[120px\],
+.blur-\[130px\],
+.blur-\[140px\],
+.blur-\[150px\] {
+  --tw-blur: blur(70px);
+}
+.animate-pulse-glow,
+.animate-orb-1,
+.animate-orb-2 {
+  will-change: transform, opacity;
+}
+
+/* Emoji bounce when you pick a reaction */
+@keyframes reactPop {
+  0% {
+    transform: scale(1) rotate(0deg);
+  }
+  35% {
+    transform: scale(1.7) rotate(-14deg);
+  }
+  70% {
+    transform: scale(0.9) rotate(8deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
+}
+.react-pop {
+  animation: reactPop 0.6s cubic-bezier(0.22, 1, 0.36, 1);
 }

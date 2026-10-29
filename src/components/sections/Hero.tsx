@@ -358,7 +358,7 @@ export default function Hero() {
                   <Image
                     src={siteImages.hero.src}
                     alt={siteImages.hero.alt}
-                    unoptimized
+                    quality={90}
                     fill
                     sizes="(max-width: 640px) 224px, (max-width: 1024px) 272px, 304px"
                     priority

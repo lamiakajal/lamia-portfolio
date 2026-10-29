@@ -62,9 +62,30 @@ export default function CursorSpotlight() {
       document.body.appendChild(r);
     };
 
+    // Touch screens have no hover, so the light also shows while the page scrolls
+    const touchScreen = window.matchMedia("(hover: none)").matches;
+    let lastX = window.innerWidth / 2;
+    let lastY = window.innerHeight * 0.45;
+
+    const onScroll = () => {
+      if (!touchScreen) return;
+      tx = lastX;
+      ty = lastY;
+      if (el.style.opacity !== "1") {
+        x = tx;
+        y = ty;
+      }
+      show();
+      clearTimeout(hideTimer);
+      hideTimer = setTimeout(hide, 900);
+      kick();
+    };
+
     const onMove = (e: PointerEvent) => {
       tx = e.clientX;
       ty = e.clientY;
+      lastX = tx;
+      lastY = ty;
       if (reduce) {
         x = tx;
         y = ty;
@@ -97,6 +118,7 @@ export default function CursorSpotlight() {
     window.addEventListener("pointerdown", onDown, { passive: true });
     window.addEventListener("pointerup", onUp, { passive: true });
     window.addEventListener("pointercancel", onUp, { passive: true });
+    window.addEventListener("scroll", onScroll, { passive: true });
     document.documentElement.addEventListener("mouseleave", onLeaveWindow);
 
     return () => {
@@ -106,6 +128,7 @@ export default function CursorSpotlight() {
       window.removeEventListener("pointerdown", onDown);
       window.removeEventListener("pointerup", onUp);
       window.removeEventListener("pointercancel", onUp);
+      window.removeEventListener("scroll", onScroll);
       document.documentElement.removeEventListener("mouseleave", onLeaveWindow);
     };
   }, []);

@@ -59,7 +59,7 @@ export default function Footer() {
   }, []);
 
   return (
-    <footer className="relative z-10 border-t border-line bg-footer backdrop-blur-2xl text-slate-300 pt-16 pb-12 overflow-hidden select-none">
+    <footer className="relative z-10 border-t border-line bg-footer text-slate-300 pt-16 pb-12 overflow-hidden select-none">
       {/* Custom CSS for Buttery Smooth Hardware-Accelerated Animations */}
       <style
         dangerouslySetInnerHTML={{
@@ -75,7 +75,7 @@ export default function Footer() {
         @keyframes floatWaveIconOnly {
           0%, 100% {
             transform: translate3d(0, 0, 0) scale(1);
-            color: rgba(255, 255, 255, 0.7);
+            color: color-mix(in srgb, var(--fg-strong) 70%, transparent);
           }
           50% {
             transform: translate3d(0, -5px, 0) scale(1.08);
@@ -139,10 +139,9 @@ export default function Footer() {
               </Link>
             </div>
             <p className="text-sm text-slate-300 max-w-md mx-auto md:mx-0 leading-relaxed font-normal wrap-break-word">
-              Engineering robust, scalable full-stack web architectures from
-              immersive front-end interfaces to high-performance back-end
-              services. Focused on clean code, responsiveness, and premium
-              digital experiences.
+              Full Stack Developer building fast, responsive and beautifully
+              animated web applications with Next.js, TypeScript, React, Node.js
+              and MongoDB. Open to work, freelance projects and collaboration.
             </p>
           </div>
 

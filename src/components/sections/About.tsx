@@ -355,7 +355,7 @@ export default function About() {
                       <Image
                         src={siteImages.about.src}
                         alt={siteImages.about.alt}
-                        unoptimized
+                        quality={90}
                         fill
                         sizes="(max-width: 640px) 80vw, (max-width: 1024px) 384px, 33vw"
                         className="object-cover"

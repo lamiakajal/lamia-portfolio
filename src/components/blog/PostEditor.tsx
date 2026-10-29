@@ -23,6 +23,7 @@ import {
   UploadCloud,
 } from "lucide-react";
 import { renderMarkdown } from "@/lib/markdown";
+import { useToast } from "@/components/ui/ToastProvider";
 import { slugify, type Post, type PostStatus } from "@/lib/blog-types";
 
 const inputClass =
@@ -31,6 +32,7 @@ const labelClass = "block text-xs font-semibold text-slate-300 mb-1.5";
 
 export default function PostEditor({ post }: { post?: Post }) {
   const router = useRouter();
+  const toast = useToast();
   const editing = Boolean(post);
 
   const [title, setTitle] = useState(post?.title ?? "");
@@ -84,9 +86,12 @@ export default function PostEditor({ post }: { post?: Post }) {
       const res = await fetch("/api/upload", { method: "POST", body: form });
       const data = (await res.json().catch(() => ({}))) as { ok?: boolean; url?: string; error?: string };
       if (!res.ok || !data.url) {
-        setError(data.error ?? "Upload failed.");
+        const message = data.error ?? "Upload failed.";
+        setError(message);
+        toast.error(message, { title: "Upload failed" });
         return null;
       }
+      toast.success("Your image is uploaded and ready.", { title: "Image uploaded" });
       return data.url;
     } catch {
       setError("Upload failed. Check your connection.");
@@ -132,14 +137,23 @@ export default function PostEditor({ post }: { post?: Post }) {
       });
       const data = (await res.json().catch(() => ({}))) as { ok?: boolean; error?: string };
       if (!res.ok || !data.ok) {
-        setError(data.error ?? "Could not save the post.");
+        const message = data.error ?? "Could not save the post.";
+        setError(message);
+        toast.error(message, { title: "Not saved" });
         setSaving(false);
         return;
       }
+      toast.success(
+        finalStatus === "published"
+          ? "Your post is published and live on the blog."
+          : "Your draft is saved. Only you can see it.",
+        { title: editing ? "Changes saved" : finalStatus === "published" ? "Post published!" : "Draft saved" },
+      );
       router.push("/admin/blog");
       router.refresh();
     } catch {
       setError("Network error. Please try again.");
+      toast.error("Network error. Please try again.", { title: "Not saved" });
       setSaving(false);
     }
   };

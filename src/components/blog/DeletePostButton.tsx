@@ -7,9 +7,11 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2, Trash2 } from "lucide-react";
+import { useToast } from "@/components/ui/ToastProvider";
 
 export default function DeletePostButton({ id, title }: { id: string; title: string }) {
   const router = useRouter();
+  const toast = useToast();
   const [busy, setBusy] = useState(false);
 
   const remove = async () => {
@@ -18,9 +20,10 @@ export default function DeletePostButton({ id, title }: { id: string; title: str
     try {
       const res = await fetch(`/api/blog/${id}`, { method: "DELETE" });
       if (!res.ok) throw new Error("failed");
+      toast.success(`"${title}" was deleted.`, { title: "Post deleted" });
       router.refresh();
     } catch {
-      window.alert("Could not delete the post. Please try again.");
+      toast.error("Could not delete the post. Please try again.", { title: "Not deleted" });
     } finally {
       setBusy(false);
     }

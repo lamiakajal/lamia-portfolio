@@ -5,7 +5,7 @@ import { notFound, redirect } from "next/navigation";
 import { Outfit } from "next/font/google";
 import PostEditor from "@/components/blog/PostEditor";
 import NotAdmin from "@/components/blog/NotAdmin";
-import { getSession, isAdminUser } from "@/lib/session";
+import { getSession, isAdminEmail, isAdminUser } from "@/lib/session";
 import { getPostById } from "@/lib/blog";
 
 const outfit = Outfit({ subsets: ["latin"], weight: ["600", "700", "800"], display: "swap" });
@@ -19,7 +19,11 @@ export default async function EditPostPage({ params }: PageProps) {
   const { id } = await params;
   const session = await getSession();
   if (!session) redirect(`/login?next=/admin/blog/${id}/edit`);
-  if (!isAdminUser(session.user)) return <NotAdmin email={session.user.email} />;
+  if (!isAdminUser(session.user)) return <NotAdmin
+        email={session.user.email}
+        verified={Boolean(session.user.emailVerified)}
+        listed={isAdminEmail(session.user.email)}
+      />;
 
   const post = await getPostById(id).catch(() => null);
   if (!post) notFound();

@@ -21,6 +21,10 @@ const adminEmails = () =>
     .map((e) => e.trim().toLowerCase())
     .filter(Boolean);
 
+/** Is this email in the ADMIN_EMAILS list? (does not check verification) */
+export const isAdminEmail = (email?: string | null): boolean =>
+  Boolean(email && adminEmails().includes(email.toLowerCase()));
+
 export function isAdminUser(
   user: { email?: string | null; emailVerified?: boolean } | null | undefined,
 ): boolean {
