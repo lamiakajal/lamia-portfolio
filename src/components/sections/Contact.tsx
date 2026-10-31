@@ -94,7 +94,7 @@ interface ContactCard {
   color: string;
 }
 
-const contactCards: ContactCard[] = [
+const allContactCards: ContactCard[] = [
   {
     key: "email",
     icon: Mail,
@@ -124,6 +124,11 @@ const contactCards: ContactCard[] = [
     color: "#25D366",
   },
 ];
+
+// The phone card only appears when a number is written in portfolioData.ts
+const contactCards = allContactCards.filter(
+  (card) => card.key !== "phone" || Boolean(contactInfo.phone),
+);
 
 type Status = "idle" | "sending" | "success" | "error" | "fallback";
 
@@ -182,7 +187,9 @@ export default function Contact() {
 
       if (res.ok && data.ok) {
         setStatus("success");
-        toast.success("Thank you! I will reply to your email soon.", { title: "Message sent" });
+        toast.success("Thank you! I will reply to your email soon.", {
+          title: "Message sent",
+        });
         setForm(emptyForm);
         return;
       }
@@ -198,7 +205,9 @@ export default function Contact() {
       }
 
       setErrorText(data.error ?? "Something went wrong. Please try again.");
-      toast.error(data.error ?? "Something went wrong. Please try again.", { title: "Message not sent" });
+      toast.error(data.error ?? "Something went wrong. Please try again.", {
+        title: "Message not sent",
+      });
       setStatus("error");
     } catch {
       setErrorText(

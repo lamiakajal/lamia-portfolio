@@ -24,6 +24,8 @@ export interface Post {
   updatedAt: string;
   publishedAt: string | null;
   readingMinutes: number;
+  /** How many times readers opened the post */
+  views: number;
 }
 
 /** What the editor sends to the API */
@@ -81,7 +83,10 @@ export function parsePostInput(
   if (content.length > 100000)
     return { ok: false, error: "The post is too long." };
   if (excerpt.length > 300)
-    return { ok: false, error: "The short summary can be 300 characters at most." };
+    return {
+      ok: false,
+      error: "The short summary can be 300 characters at most.",
+    };
   if (coverImage && !isHttpUrl(coverImage))
     return { ok: false, error: "Cover image must be a full https:// link." };
   if (status !== "draft" && status !== "published" && status !== "pending")

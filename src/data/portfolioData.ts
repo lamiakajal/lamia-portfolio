@@ -283,10 +283,11 @@ export const getSocial = (key: string): string =>
 export const contactInfo = {
   email: "lamiakajal@gmail.com",
   website: "https://lamiakajal.com",
-  // TODO: MOCK phone number - replace with the real one
-  phone: "+880 1700-000000",
+  // Leave empty to HIDE the phone card on the website. When you are ready, write the number
+  // here (for example "+880 1XXX-XXXXXX") and in `phoneHref` (digits and + only).
+  phone: "",
   // Used for the tel: link (digits and + only) - keep in sync with `phone`
-  phoneHref: "+8801700000000",
+  phoneHref: "",
   whatsappUsername: "lamiakajal",
 };
 
@@ -333,7 +334,7 @@ export const siteImages = {
 //   1. Open the review on Google / Facebook / LinkedIn.
 //   2. Copy the text exactly as the client wrote it (you may shorten it with "...").
 //   3. Copy one block from the TEMPLATE below, paste it inside `testimonials` and fill it in.
-//   Until you add reviews, the section shows buttons that open your review pages.
+//   NEW reviews go at the TOP of the list (newest first). Keep the text exactly as the client wrote it.
 //
 // TEMPLATE:
 //   {
@@ -342,6 +343,8 @@ export const siteImages = {
 //     text: "What the client wrote about your work.",
 //     source: "google",                             // "google" | "facebook" | "linkedin"
 //     rating: 5,                                    // optional, 1 to 5 (Google reviews have stars)
+//     date: "June 2025",                            // optional
+//     image: "/testimonials/client-name.webp",      // optional picture (put the file in /public/testimonials/)
 //     url: "https://...",                           // optional: link to this exact review
 //   },
 // ==========================================
@@ -353,10 +356,83 @@ export interface Testimonial {
   text: string;
   source: ReviewSource;
   rating?: 1 | 2 | 3 | 4 | 5;
+  /** Shown under the name, for example "June 2025" */
+  date?: string;
+  /** Picture of the person, for example "/testimonials/zain-hanif.webp" (file goes in /public/testimonials/) */
+  image?: string;
   url?: string;
 }
 
-export const testimonials: Testimonial[] = [];
+export const testimonials: Testimonial[] = [
+  // ----------------------------- Google reviews -----------------------------
+  {
+    name: "zain hanif",
+    text: "I'm really impressed with Lamia Kajal's work. She was very professional, communicated clearly throughout the project, and delivered high-quality results. Everything was done on time and with great attention to detail. Highly satisfied!",
+    source: "google",
+    rating: 5,
+  },
+  {
+    name: "Zaid khan Paindakhel",
+    text: "We've worked together numerous times. She is always professional and has great communication. The SEO work with this will help my website, especially with the search engines. thanks!",
+    source: "google",
+    rating: 5,
+  },
+  {
+    name: "Najeeb Ullah",
+    text: "Very professional developer, flexible, and quick delivery. thank you for your good work maam. Great working with Lamia as always! Lamia Kajal suprise me again. Good job! Thank you",
+    source: "google",
+    rating: 5,
+  },
+  // ------------------------ LinkedIn recommendations ------------------------
+  {
+    name: "Zaid khan Paindakhel",
+    text: "Lamia Kajal is an outstanding web developer! Her expertise and professionalism shine through in her flawless work, and she truly goes ABOVE AND BEYOND to deliver on time with a polite and positive attitude. Highly recommended!",
+    source: "linkedin",
+    date: "June 2025",
+  },
+  {
+    name: "Abul Bassar",
+    role: "Professional Web Developer & WordPress Expert",
+    text: "I've had the pleasure of working with Lamia Kajal on multiple web development projects, and let me tell you \u2014 she's the real deal. Lamia brings a rare blend of technical skill, creative design thinking, and a \"get-it-done\" attitude that sets her apart in today's digital space.\n\nWhether it's building responsive WordPress sites, fine-tuning UI/UX details, or turning complex Figma designs into pixel-perfect pages, she handles it all with professionalism and precision.",
+    source: "linkedin",
+    date: "June 2025",
+  },
+  {
+    name: "Riyadul Islam",
+    role: "Professional WordPress WooCommerce Developer",
+    text: "I've had the pleasure of working with Lamia Kajal, and she's an outstanding full-stack developer and WordPress designer. Her front-end work is clean and user-friendly, while her back-end skills ensure strong and reliable performance. Lamia is a quick learner, a great problem-solver, and always delivers high-quality work on time. Highly recommended.",
+    source: "linkedin",
+    date: "June 2025",
+  },
+  {
+    name: "Sumon Babu",
+    role: "Professional Web Designer And WordPress Developer",
+    text: "Lamia Kajal did an excellent job revamping my website! The communication was great. She always responded quickly and made all changes and updates. She is a pleasure to work with, and she is professional, and I look forward to working with him again on future projects!",
+    source: "linkedin",
+    date: "June 2025",
+  },
+  {
+    name: "Md Habibur Rahman",
+    role: "WordPress, eCommerce Developer",
+    text: "Lamia Kajal is a talented and dedicated web developer with strong skills in WordPress, front-end, back-end, and e-commerce. As a classmate, I've seen her consistently produce smart, user-friendly designs and solve problems with ease. She's reliable, creative, and always willing to help others. I'm happy to recommend her to anyone looking for a skilled developer.",
+    source: "linkedin",
+    date: "June 2025",
+  },
+  {
+    name: "Shihab UA",
+    role: "Professional Web Developer & SEO Expert",
+    text: "Lamia Kajal is a dedicated and skilled web developer with strong expertise in WordPress, proven through his successful work on Fiverr. He's detail-oriented, a great problem solver, and a reliable team player\u2014an asset to any team",
+    source: "linkedin",
+    date: "June 2025",
+  },
+  {
+    name: "Ahmed Emtiaz",
+    role: "Aspiring Web Designer & WordPress Developer",
+    text: "She is a wonderful person with strong skills. She has assisted me with many things.",
+    source: "linkedin",
+    date: "June 2025",
+  },
+];
 
 /** Where clients left their reviews (these links open the real pages) */
 export const reviewPlatforms: {

@@ -12,6 +12,7 @@ import { ArrowLeft, Clock, Calendar, User } from "lucide-react";
 import Reveal from "@/components/ui/Reveal";
 import ShareButtons from "@/components/blog/ShareButtons";
 import PostEngagement from "@/components/blog/PostEngagement";
+import ViewTracker from "@/components/blog/ViewTracker";
 import MessageMe from "@/components/blog/MessageMe";
 import { getSession, isAdminUser } from "@/lib/session";
 import { getEngagement, listComments } from "@/lib/engagement";
@@ -31,7 +32,9 @@ export const dynamic = "force-dynamic";
 
 type PageProps = { params: Promise<{ slug: string }> };
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
   const { slug } = await params;
   try {
     const post = await getPublishedPostBySlug(slug);
@@ -75,6 +78,7 @@ export default async function BlogPostPage({ params }: PageProps) {
 
   return (
     <article className="relative w-full pt-6 pb-20 sm:pb-28 overflow-hidden">
+      <ViewTracker postId={post.id} />
       <div className="absolute top-20 right-0 translate-x-1/2 w-72 sm:w-96 h-72 sm:h-96 bg-pink-600/10 blur-[130px] pointer-events-none rounded-full animate-pulse-glow" />
 
       <div className="w-full max-w-3xl mx-auto px-4 xs:px-5 sm:px-6 relative z-10">
@@ -83,7 +87,10 @@ export default async function BlogPostPage({ params }: PageProps) {
             href="/blog"
             className="group inline-flex items-center gap-2 text-sm font-medium text-slate-300 hover:text-pink-400 transition-colors mb-8"
           >
-            <ArrowLeft size={16} className="transition-transform duration-300 group-hover:-translate-x-1" />
+            <ArrowLeft
+              size={16}
+              className="transition-transform duration-300 group-hover:-translate-x-1"
+            />
             Back to Blog
           </Link>
         </Reveal>
@@ -103,13 +110,24 @@ export default async function BlogPostPage({ params }: PageProps) {
                 ))}
               </div>
             )}
-            <h1 className={`text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-strong leading-tight mb-5 ${outfit.className}`}>
+            <h1
+              className={`text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-strong leading-tight mb-5 ${outfit.className}`}
+            >
               {post.title}
             </h1>
             <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-slate-400">
-              <span className="inline-flex items-center gap-1.5"><User size={14} />{post.authorName}</span>
-              <span className="inline-flex items-center gap-1.5"><Calendar size={14} />{formatDate(post.publishedAt)}</span>
-              <span className="inline-flex items-center gap-1.5"><Clock size={14} />{post.readingMinutes} min read</span>
+              <span className="inline-flex items-center gap-1.5">
+                <User size={14} />
+                {post.authorName}
+              </span>
+              <span className="inline-flex items-center gap-1.5">
+                <Calendar size={14} />
+                {formatDate(post.publishedAt)}
+              </span>
+              <span className="inline-flex items-center gap-1.5">
+                <Clock size={14} />
+                {post.readingMinutes} min read
+              </span>
             </div>
           </header>
         </Reveal>
@@ -117,14 +135,25 @@ export default async function BlogPostPage({ params }: PageProps) {
         {post.coverImage && (
           <Reveal direction="zoom" delay={100}>
             <div className="relative aspect-video w-full rounded-3xl overflow-hidden border border-line shadow-2xl shadow-pink-500/15 mb-10">
-              <Image src={post.coverImage} alt={post.title} fill unoptimized priority sizes="768px" className="object-cover" />
+              <Image
+                src={post.coverImage}
+                alt={post.title}
+                fill
+                unoptimized
+                priority
+                sizes="768px"
+                className="object-cover"
+              />
             </div>
           </Reveal>
         )}
 
         {/* Safe: the Markdown converter escapes all HTML before adding its own tags */}
         <Reveal direction="up" threshold={0.02}>
-          <div className="prose-blog" dangerouslySetInnerHTML={{ __html: html }} />
+          <div
+            className="prose-blog"
+            dangerouslySetInnerHTML={{ __html: html }}
+          />
         </Reveal>
 
         <Reveal direction="up">

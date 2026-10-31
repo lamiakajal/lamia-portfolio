@@ -13,6 +13,7 @@ import Preloader from "@/components/ui/Preloader";
 import CursorSpotlight from "@/components/ui/CursorSpotlight";
 import ScrollToTop from "@/components/ui/ScrollToTop";
 import { ToastProvider } from "@/components/ui/ToastProvider";
+import { Analytics } from "@vercel/analytics/next";
 import { contactInfo, socialLinks } from "@/data/portfolioData";
 
 const plusJakarta = Plus_Jakarta_Sans({
@@ -128,6 +129,8 @@ export default function RootLayout({
             <Footer />
           </div>
         </ToastProvider>
+        {/* Visitor statistics (Vercel Analytics) */}
+        <Analytics />
       </body>
     </html>
   );
