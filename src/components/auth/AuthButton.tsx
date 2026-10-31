@@ -8,7 +8,18 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { LogIn, LogOut, PenSquare, LayoutList, Loader2, Bookmark, Inbox } from "lucide-react";
+import {
+  LogIn,
+  LogOut,
+  PenSquare,
+  LayoutList,
+  Loader2,
+  Bookmark,
+  Inbox,
+  UserRound,
+  LayoutDashboard,
+  MessageSquare,
+} from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 import { useToast } from "@/components/ui/ToastProvider";
 
@@ -69,12 +80,17 @@ export default function AuthButton() {
     try {
       if (userId && sessionStorage.getItem("auth-welcome")) {
         sessionStorage.removeItem("auth-welcome");
-        toast.success(`Welcome${userName ? `, ${userName}` : ""}! You are now signed in.`, {
-          title: "Signed in",
-        });
+        toast.success(
+          `Welcome${userName ? `, ${userName}` : ""}! You are now signed in.`,
+          {
+            title: "Signed in",
+          },
+        );
       } else if (!userId && sessionStorage.getItem("auth-bye")) {
         sessionStorage.removeItem("auth-bye");
-        toast.info("You have been signed out. See you soon!", { title: "Signed out" });
+        toast.info("You have been signed out. See you soon!", {
+          title: "Signed out",
+        });
       }
     } catch {
       /* storage can be blocked */
@@ -115,7 +131,10 @@ export default function AuthButton() {
 
     try {
       // The server ends the session and deletes the (httpOnly) login cookies
-      await fetch("/api/logout", { method: "POST", credentials: "same-origin" });
+      await fetch("/api/logout", {
+        method: "POST",
+        credentials: "same-origin",
+      });
     } catch (err) {
       console.error("Sign out error:", err);
     }
@@ -146,7 +165,16 @@ export default function AuthButton() {
         aria-expanded={open}
         className="relative w-10 h-10 rounded-full bg-linear-to-br from-pink-500 to-fuchsia-500 text-white text-sm font-bold flex items-center justify-center shadow-[0_0_18px_rgba(236,72,153,0.4)] hover:scale-110 active:scale-90 transition-all"
       >
-        {initial}
+        {session.user.image ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={session.user.image}
+            alt=""
+            className="w-full h-full rounded-full object-cover"
+          />
+        ) : (
+          initial
+        )}
         {unread > 0 && (
           <span className="absolute -top-1 -right-1 min-w-5 h-5 px-1 rounded-full bg-red-500 text-[10px] font-bold text-white flex items-center justify-center ring-2 ring-(--bg)">
             {unread > 9 ? "9+" : unread}
@@ -164,11 +192,27 @@ export default function AuthButton() {
               {session.user.email}
             </p>
           </div>
+          <Link href="/profile" onClick={() => setOpen(false)} className={item}>
+            <UserRound size={16} /> My profile
+          </Link>
+          {!isAdmin && (
+            <Link href="/inbox" onClick={() => setOpen(false)} className={item}>
+              <MessageSquare size={16} /> My inbox
+              {unread > 0 ? ` (${unread})` : ""}
+            </Link>
+          )}
           <Link href="/saved" onClick={() => setOpen(false)} className={item}>
             <Bookmark size={16} /> Saved posts
           </Link>
           {isAdmin && (
             <>
+              <Link
+                href="/admin"
+                onClick={() => setOpen(false)}
+                className={item}
+              >
+                <LayoutDashboard size={16} /> Dashboard
+              </Link>
               <Link
                 href="/admin/blog/new"
                 onClick={() => setOpen(false)}

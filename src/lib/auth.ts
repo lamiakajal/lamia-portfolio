@@ -2,6 +2,9 @@ import { betterAuth } from "better-auth";
 import { mongodbAdapter } from "better-auth/adapters/mongodb";
 import { nextCookies } from "better-auth/next-js";
 import { db } from "@/lib/mongodb";
+import { resolveBaseUrl } from "@/lib/base-url";
+
+const baseURL = resolveBaseUrl();
 
 const githubId = process.env.GITHUB_CLIENT_ID;
 const githubSecret = process.env.GITHUB_CLIENT_SECRET;
@@ -11,10 +14,10 @@ const googleSecret = process.env.GOOGLE_CLIENT_SECRET;
 export const auth = betterAuth({
   database: mongodbAdapter(db),
   secret: process.env.BETTER_AUTH_SECRET,
-  baseURL: process.env.BETTER_AUTH_URL || "http://localhost:3000",
+  baseURL,
   // Requests (login, logout...) are only accepted from these addresses
   trustedOrigins: [
-    process.env.BETTER_AUTH_URL || "http://localhost:3000",
+    ...(baseURL ? [baseURL] : []),
     "https://lamiakajal.com",
     "https://www.lamiakajal.com",
     "http://localhost:3000",

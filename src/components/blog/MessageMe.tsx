@@ -13,7 +13,13 @@ import { useToast } from "@/components/ui/ToastProvider";
 const inputClass =
   "w-full rounded-xl bg-card border border-line px-4 py-3 text-sm text-strong placeholder:text-slate-500 outline-none transition-all focus:border-pink-500/70 focus:ring-4 focus:ring-pink-500/15";
 
-export default function MessageMe({ loggedIn, loginUrl }: { loggedIn: boolean; loginUrl: string }) {
+export default function MessageMe({
+  loggedIn,
+  loginUrl,
+}: {
+  loggedIn: boolean;
+  loginUrl: string;
+}) {
   const toast = useToast();
   const [open, setOpen] = useState(false);
   const [subject, setSubject] = useState("");
@@ -24,19 +30,28 @@ export default function MessageMe({ loggedIn, loginUrl }: { loggedIn: boolean; l
     e.preventDefault();
     setSending(true);
     try {
-      const res = await fetch("/api/messages", {
+      const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ subject, message }),
+        body: JSON.stringify({ text: `${subject}\n\n${message}` }),
       });
-      const data = (await res.json().catch(() => ({}))) as { ok?: boolean; error?: string };
-      if (!res.ok || !data.ok) throw new Error(data.error ?? "Could not send your message.");
-      toast.success("Your message is in my inbox. I will reply by email.", { title: "Message sent" });
+      const data = (await res.json().catch(() => ({}))) as {
+        ok?: boolean;
+        error?: string;
+      };
+      if (!res.ok || !data.ok)
+        throw new Error(data.error ?? "Could not send your message.");
+      toast.success(
+        "Sent! My reply will appear in your Inbox (top-right menu).",
+        { title: "Message sent" },
+      );
       setSubject("");
       setMessage("");
       setOpen(false);
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Could not send your message.");
+      toast.error(
+        err instanceof Error ? err.message : "Could not send your message.",
+      );
     } finally {
       setSending(false);
     }
@@ -50,7 +65,9 @@ export default function MessageMe({ loggedIn, loginUrl }: { loggedIn: boolean; l
             <Mail size={18} className="text-pink-400" />
             Want to talk to me?
           </h2>
-          <p className="text-sm text-slate-400 mt-1">Send me a private message. It goes straight to my inbox.</p>
+          <p className="text-sm text-slate-400 mt-1">
+            Send me a private message. My reply appears in your Inbox.
+          </p>
         </div>
         {loggedIn ? (
           <button
@@ -73,14 +90,35 @@ export default function MessageMe({ loggedIn, loginUrl }: { loggedIn: boolean; l
 
       {loggedIn && open && (
         <form onSubmit={send} className="skill-pop mt-5 space-y-4">
-          <input className={inputClass} placeholder="Subject" value={subject} onChange={(e) => setSubject(e.target.value)} minLength={2} maxLength={150} required />
-          <textarea className={`${inputClass} resize-y`} rows={5} placeholder="Your message..." value={message} onChange={(e) => setMessage(e.target.value)} minLength={10} maxLength={3000} required />
+          <input
+            className={inputClass}
+            placeholder="Subject"
+            value={subject}
+            onChange={(e) => setSubject(e.target.value)}
+            minLength={2}
+            maxLength={150}
+            required
+          />
+          <textarea
+            className={`${inputClass} resize-y`}
+            rows={5}
+            placeholder="Your message..."
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            minLength={10}
+            maxLength={3000}
+            required
+          />
           <button
             type="submit"
             disabled={sending}
             className="btn-shine relative overflow-hidden inline-flex items-center gap-2 px-6 py-3 rounded-full bg-linear-to-r from-pink-600 via-fuchsia-500 to-pink-500 text-white text-sm font-semibold shadow-[0_0_20px_rgba(236,72,153,0.45)] hover:scale-105 active:scale-95 disabled:opacity-60 transition-all"
           >
-            {sending ? <Loader2 size={15} className="relative z-10 animate-spin" /> : <Send size={15} className="relative z-10" />}
+            {sending ? (
+              <Loader2 size={15} className="relative z-10 animate-spin" />
+            ) : (
+              <Send size={15} className="relative z-10" />
+            )}
             <span className="relative z-10">Send message</span>
           </button>
         </form>
